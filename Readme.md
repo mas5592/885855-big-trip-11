@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Мария Самарцева](https://up.htmlacademy.ru/ecmascript/11/user/885855).
-* Наставник: `Неизвестно`.
+* Наставник: [Анна Тюрина](https://htmlacademy.ru/profile/anntv).
 
 ---
 
