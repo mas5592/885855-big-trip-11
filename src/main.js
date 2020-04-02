@@ -1,8 +1,8 @@
-//Функция для рендеринга
+'use strict';
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
-//Информация о маршруте
+
 const createInfoBigTripTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
@@ -14,7 +14,7 @@ const createInfoBigTripTemplate = () => {
 </section>`
   );
 };
-//Стоимость поездки
+
 const createCostValueBigTripTemplate = () => {
   return (
     `<p class="trip-info__cost">
@@ -22,7 +22,7 @@ const createCostValueBigTripTemplate = () => {
   </p>`
   );
 };
-//Меню
+
 const createMenuBigTripTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
@@ -31,7 +31,7 @@ const createMenuBigTripTemplate = () => {
   </nav>`
   );
 };
-//Фильтры
+
 const createFiltersBigTripTemplate = () => {
   return (
     `<form class="trip-filters" action="#" method="get">
@@ -54,7 +54,7 @@ const createFiltersBigTripTemplate = () => {
     </form>`
   );
 };
-//Сортировка
+
 const createSortBigTripTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
@@ -83,7 +83,7 @@ const createSortBigTripTemplate = () => {
   </form>`
   );
 };
-//Маршрут
+
 const createEventsItemBigTripTemplate = () => {
   return (
     `<li class="trip-events__item">
@@ -118,7 +118,7 @@ const createEventsItemBigTripTemplate = () => {
   </li>`
   );
 };
-//Форма маршрута
+
 const createEventsBigTripTemplate = () => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -270,14 +270,14 @@ const createEventsBigTripTemplate = () => {
   </form>`
   );
 };
-//Шаблон списка поездок
+
 const createListBigTripTemplate = () => {
   return (
     `<ul class="trip-days">
     </ul>`
   );
 };
-//Шаблон карточки поездки
+
 const createDayBigTripTemplate = () => {
   return (
     `<li class="trip-days__item  day">
@@ -289,7 +289,7 @@ const createDayBigTripTemplate = () => {
     </li>`
   );
 };
-//Основные элементы
+
 const siteMainElement = document.querySelector(`.trip-main`);
 const siteControlsElement = document.querySelector(`.trip-controls`);
 const siteEventsElement = document.querySelector(`.trip-events`);
