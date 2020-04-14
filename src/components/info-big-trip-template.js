@@ -1,15 +1,31 @@
-const createInfoBigTripTemplate = () => {
-  return (
-    `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
+import {TYPE_MONTHS} from '../data';
 
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
-    </div>
-  </section>`
-  );
+const generatePointList = (points) => {
+  return points.map((point) => point).join(` &mdash; `);
 };
 
-export {
-  createInfoBigTripTemplate
+const genarateDates = (start, end) => {
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+  const startMonth = start.getMonth();
+
+  return `${TYPE_MONTHS[startMonth]} ${startDay} &mdash; ${endDay}`;
+};
+
+export const createInfoBigTripTemplate = (points) => {
+  const pointList = points.reduce((acc, point) => {
+    acc.push(point.point);
+    return acc;
+  }, []);
+  const startDay = points[0].startDay;
+  const endDay = points[points.length - 1].endDay;
+
+  return (
+    `<section class="trip-main__trip-info  trip-info">
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">${generatePointList(pointList)}</h1>
+        <p class="trip-info__dates">${genarateDates(startDay, endDay)}</p>
+      </div>
+    </section>`
+  );
 };

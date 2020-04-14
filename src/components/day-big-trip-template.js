@@ -1,15 +1,20 @@
-const createDayBigTripTemplate = () => {
+import {TYPE_MONTHS} from '../data';
+import {createEventsItemBigTripTemplate} from './events-item-big-trip-template';
+
+export const createDayBigTripTemplate = (date, events) => {
+  const officialDate = new Date(date);
+
   return (
     `<li class="trip-days__item  day">
-        <div class="day__info">
-          <span class="day__counter">1</span>
-          <time class="day__date" datetime="2019-03-18">MAR 18</time>
-        </div>
-        <ul class="trip-events__list"></ul>
-      </li>`
+      <div class="day__info">
+        <span class="day__counter">${officialDate.getDate()}</span>
+        <time class="day__date" datetime="${date}">${TYPE_MONTHS[officialDate.getMonth()]} ${officialDate.getFullYear().toString().substr(-2)}</time>
+      </div>
+      <ul class="trip-events__list">
+        ${events.map((event) => createEventsItemBigTripTemplate(event))}
+      </ul>
+    </li>`
   );
 };
 
-export {
-  createDayBigTripTemplate
-};
+

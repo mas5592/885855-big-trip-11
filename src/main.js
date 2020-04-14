@@ -1,59 +1,83 @@
 import {
-  createInfoBigTripTemplate
+  createInfoBigTripTemplate,
 } from './components/info-big-trip-template';
 import {
   createCostValueBigTripTemplate
 } from './components/cost-value-big-trip-template';
 import {
-  createMenuBigTripTemplate
+  createMenuBigTripTemplate,
 } from './components/menu-big-trip-template';
 import {
-  createFiltersBigTripTemplate
+  createFiltersBigTripTemplate,
 } from './components/filters-big-trip-template';
 import {
-  createSortBigTripTemplate
+  createSortingBigTripTemplate,
 } from './components/sort-big-trip-template';
 import {
-  createEventsItemBigTripTemplate
-} from './components/events-item-big-trip-template';
-import {
-  createEventsBigTripTemplate
+  createEventsBigTripTemplate,
 } from './components/events-big-trip-template';
-
 import {
-  createListBigTripTemplate
+  createListBigTripTemplate,
 } from './components/list-big-trip-template';
 import {
-  createDayBigTripTemplate
+  createDayBigTripTemplate,
 } from './components/day-big-trip-template';
+
+import {generateFilters} from './mock/filter';
+import {generateEvents} from './mock/event';
+
+const EVENT_COUNT = 15;
+const DISPLAY_EVENTS_START = 10;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const ROUTE_COUNT = 3;
+const filters = generateFilters();
+const events = generateEvents(EVENT_COUNT);
+const eventsPrice = events.reduce((acc, event) => {
+  return acc + event.price.value;
+}, 0);
+const eventPoints = events.reduce((acc, event) => {
+  acc.push({
+    point: event.location,
+    startDay: event.startDate,
+    endDay: event.endDate,
+  });
+  return acc;
+}, []);
 
-const siteMainElement = document.querySelector(`.trip-main`);
-const siteControlsElement = document.querySelector(`.trip-controls`);
-const siteEventsElement = document.querySelector(`.trip-events`);
+const tripMainElement = document.querySelector(`.trip-main`);
+const tripControlsElement = document.querySelector(`.trip-controls`);
+const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(siteMainElement, createInfoBigTripTemplate(), `afterBegin`);
+render(tripMainElement, createInfoBigTripTemplate(eventPoints), `afterBegin`);
 
-const siteInfoElement = document.querySelector(`.trip-info`);
+const tripInfoElement = document.querySelector(`.trip-info`);
 
-render(siteInfoElement, createCostValueBigTripTemplate(), `beforeEnd`);
-render(siteControlsElement, createMenuBigTripTemplate(), `afterBegin`);
-render(siteControlsElement, createFiltersBigTripTemplate(), `beforeEnd`);
-render(siteEventsElement, createSortBigTripTemplate(), `beforeEnd`);
-render(siteEventsElement, createEventsBigTripTemplate(), `beforeEnd`);
-render(siteEventsElement, createListBigTripTemplate(), `beforeEnd`);
+render(tripInfoElement, createCostValueBigTripTemplate(eventsPrice), `beforeEnd`);
+render(tripControlsElement, createMenuBigTripTemplate(), `afterBegin`);
+render(tripControlsElement, createFiltersBigTripTemplate(filters), `beforeEnd`);
+render(tripEventsElement, createSortingBigTripTemplate(), `beforeEnd`);
+render(tripEventsElement, createEventsBigTripTemplate(events[0]), `beforeEnd`);
+render(tripEventsElement, createListBigTripTemplate(), `beforeEnd`);
 
-const siteDaysElement = document.querySelector(`.trip-days`);
+const tripDaysElement = document.querySelector(`.trip-days`);
 
-render(siteDaysElement, createDayBigTripTemplate(), `beforeEnd`);
+let showingEventsCount = DISPLAY_EVENTS_START;
+let eventsList = {};
 
-const siteListElement = document.querySelector(`.trip-events__list`);
+events.slice(1, showingEventsCount)
+  .forEach((event) => {
+    const date = `${event.startDate.getFullYear()}-${event.startDate.getMonth() + 1}-${event.startDate.getDate()}`;
 
-for (let i = 0; i < ROUTE_COUNT; i++) {
-  render(siteListElement, createEventsItemBigTripTemplate(), `beforeend`);
+    if (eventsList.hasOwnProperty(date)) {
+      eventsList[date].push(event);
+    } else {
+      eventsList[date] = [event];
+    }
+  });
+
+for (let [key, value] of Object.entries(eventsList)) {
+  render(tripDaysElement, createDayBigTripTemplate(key, value), `beforeEnd`);
 }
