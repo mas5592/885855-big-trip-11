@@ -1,5 +1,3 @@
-import {getRandomIntegerNumber} from './utils';
-
 export const FILTERS_DATA = [
   `Everything`,
   `Future`,
@@ -65,13 +63,24 @@ export const TYPE_CITY = [
   `Amsterdam`,
   `Athens`,
   `Brest`,
+  `Chicago`,
+  `Giza`,
+  `Houston`,
+  `Istanbul`,
+  `Milan`,
+  `Minsk`,
   `Moscow`,
+  `Phoenix`,
   `Prague`,
   `Pushchino`,
   `Riga`,
+  `Rome`,
   `Seoul`,
+  `Shanghai`,
   `Tokyo`,
   `Valencia`,
+  `Yangon`,
+  `Zurich`,
 ];
 
 export const TYPE_MONTHS = [
@@ -113,13 +122,11 @@ export const getRandomOptions = () => {
   }];
 };
 
-export const getRandomDate = (date) => {
-  const selectedDate = new Date(date);
-  const diffDays = getRandomIntegerNumber(0, 2);
-  const diffMinutes = getRandomIntegerNumber(0, 90);
+export const PHOTOS = [
+  `http://picsum.photos/248/152?r=${Math.random()}`,
+  `http://picsum.photos/248/152?r=${Math.random()}`,
+  `http://picsum.photos/248/152?r=${Math.random()}`,
+  `http://picsum.photos/248/152?r=${Math.random()}`,
+  `http://picsum.photos/248/152?r=${Math.random()}`
+];
 
-  selectedDate.setDate(selectedDate.getDate() + diffDays);
-  selectedDate.setMinutes(selectedDate.getMinutes() + diffMinutes);
-
-  return selectedDate;
-};

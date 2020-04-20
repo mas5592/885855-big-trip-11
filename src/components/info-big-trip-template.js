@@ -1,31 +1,38 @@
-import {TYPE_MONTHS} from '../data';
+import {createElement} from '../utils';
 
-const generatePointList = (points) => {
-  return points.map((point) => point).join(` &mdash; `);
-};
+export const createInfoBigTripTemplate = (point, days) => {
 
-const genarateDates = (start, end) => {
-  const startDay = start.getDate();
-  const endDay = end.getDate();
-  const startMonth = start.getMonth();
-
-  return `${TYPE_MONTHS[startMonth]} ${startDay} &mdash; ${endDay}`;
-};
-
-export const createInfoBigTripTemplate = (points) => {
-  const pointList = points.reduce((acc, point) => {
-    acc.push(point.point);
-    return acc;
-  }, []);
-  const startDay = points[0].startDay;
-  const endDay = points[points.length - 1].endDay;
-
+  const date = `${days.length ? `${days[0].month} ${days[0].day}&nbsp;&nbsp;&mdash;&nbsp;${days[0].month !== days[days.length - 1].month ? days[days.length - 1].month : ``} ${days[days.length - 1].day}` : ``}`;
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${generatePointList(pointList)}</h1>
-        <p class="trip-info__dates">${genarateDates(startDay, endDay)}</p>
+        <h1 class="trip-info__title">${point}</h1>
+        <p class="trip-info__dates">${date}</p>
       </div>
     </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(point, days) {
+    this._point = point;
+    this._days = days;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createInfoBigTripTemplate(this._point, this._days);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

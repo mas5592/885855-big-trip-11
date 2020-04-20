@@ -1,7 +1,8 @@
-import {TYPE_MONTHS} from '../data';
-import {createEventsItemBigTripTemplate} from './events-item-big-trip-template';
+import {createElement} from '../utils';
 
-export const createDayBigTripTemplate = (date, events) => {
+import {TYPE_MONTHS} from '../data';
+
+export const createDayBigTripTemplate = (date) => {
   const officialDate = new Date(date);
 
   return (
@@ -11,10 +12,31 @@ export const createDayBigTripTemplate = (date, events) => {
         <time class="day__date" datetime="${date}">${TYPE_MONTHS[officialDate.getMonth()]} ${officialDate.getFullYear().toString().substr(-2)}</time>
       </div>
       <ul class="trip-events__list">
-        ${events.map((event) => createEventsItemBigTripTemplate(event))}
+
       </ul>
     </li>`
   );
 };
 
+export default class TripDay {
+  constructor(date) {
+    this._date = date;
+    this._element = null;
+  }
 
+  getTemplate() {
+    return createDayBigTripTemplate(this._date);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

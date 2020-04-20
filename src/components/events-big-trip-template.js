@@ -1,5 +1,5 @@
 import {TYPE_ITEMS} from '../data';
-import {formatTime} from '../utils';
+import {createElement, formatTime} from '../utils';
 
 const createEventList = (active) => {
   return TYPE_ITEMS.map((item) => {
@@ -29,7 +29,7 @@ const createOffersList = (offers) => {
         <label class="event__offer-label" for="event-offer-luggage-1">
           <span class="event__offer-title">${title}</span>
           ${currency}
-          <span class="event__offer-price">${price}</span>
+          <span class="event__offer-price">&euro;&nbsp;${price}</span>
         </label>
       </div>`;
   }).join(`\n`);
@@ -45,22 +45,18 @@ const createDestinationPhoto = (photos) => {
 
 export const createEventsBigTripTemplate = (event) => {
   const {
-    action,
     destinationDescription,
     destinationPhoto,
     endDate,
     location,
-    locationList,
     offers,
     price,
     startDate,
     type,
   } = event;
 
-  const dateStart = `${startDate.getDate()}/${startDate.getMonth()}/${startDate.getFullYear().toString().substr(-2)}`;
-  const timeStart = formatTime(startDate);
-  const dateEnd = `${endDate.getDate()}/${endDate.getMonth()}/${endDate.getFullYear().toString().substr(-2)}`;
-  const timeEnd = formatTime(endDate);
+  const timeStart = formatTime(startDate, true);
+  const timeEnd = formatTime(endDate, true);
 
   const offersList = createOffersList(offers);
   const eventList = createEventList(type);
@@ -85,30 +81,30 @@ export const createEventsBigTripTemplate = (event) => {
         </div>
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">
-            ${type} ${action}
+          ${type ? type : `Bus`} to
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${location}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${locationList.map((city) => (`<option value="${city}"></option>`)).join(`\n`)}
+
           </datalist>
         </div>
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateStart} ${timeStart}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${timeStart ? timeStart : `18/03/19 00:00`}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateEnd} ${timeEnd}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${timeEnd ? timeEnd : `18/03/19 00:00`}">
         </div>
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price-1">
             <span class="visually-hidden">Price</span>
-            ${price.currency}
+            &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price.value}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price ? price : ``}">
         </div>
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
@@ -143,3 +139,26 @@ export const createEventsBigTripTemplate = (event) => {
     </form>`
   );
 };
+
+export default class TripEvents {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventsBigTripTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

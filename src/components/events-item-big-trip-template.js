@@ -1,8 +1,9 @@
-import {formatTime} from '../utils';
+import {formatTime, formatDurationTime, createElement} from '../utils';
+import {TYPE_POINTS_ACTIVITY} from '../data';
 
 export const createEventsItemBigTripTemplate = (event) => {
+
   const {
-    action,
     endDate,
     location,
     price,
@@ -10,10 +11,10 @@ export const createEventsItemBigTripTemplate = (event) => {
     type,
   } = event;
 
-  const dateStart = `${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}`;
-  const timeStart = formatTime(startDate);
-  const dateEnd = `${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()}`;
   const timeEnd = formatTime(endDate);
+  const timeStart = formatTime(startDate);
+  const timeDuration = endDate - startDate;
+  const action = TYPE_POINTS_ACTIVITY.some((pretexts) => type === pretexts) ? `in` : `to`;
 
   return (
     `<li class="trip-events__item">
@@ -24,21 +25,21 @@ export const createEventsItemBigTripTemplate = (event) => {
         <h3 class="event__title">${type} ${action} ${location}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateStart}T${timeStart}">${timeStart}</time>
-            &mdash;
-            <time class="event__end-time" datetime="${dateEnd}T${timeEnd}">${timeEnd}</time>
+            <time class="event__start-time" datetime="2019-03-18T11:00">${timeStart}</time>
+               &mdash;
+            <time class="event__end-time" datetime="2019-03-18T11:00">${timeEnd}</time>
           </p>
-          <p class="event__duration">${(startDate.getTime() - endDate.getTime()) / 1000}M</p>
+          <p class="event__duration">${formatDurationTime(timeDuration)}</p>
         </div>
         <p class="event__price">
-          ${price.currency}<span class="event__price-value">${price.value}</span>
+        &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
           <li class="event__offer">
             <span class="event__offer-title">Order Uber</span>
             &plus;
-            ${price.currency}&nbsp;<span class="event__offer-price">${price.value}</span>
+            &euro;<span class="event__offer-price">${price}</span>
           </li>
         </ul>
         <button class="event__rollup-btn" type="button">
@@ -48,3 +49,26 @@ export const createEventsItemBigTripTemplate = (event) => {
     </li>`
   );
 };
+
+export default class TripEventsItem {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventsItemBigTripTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
