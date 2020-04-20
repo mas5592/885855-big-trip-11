@@ -11,17 +11,20 @@ import TripDayComponent from './components/day-big-trip-template';
 import {generateFilters} from './mock/filter';
 import {generateEvents} from './mock/event';
 
-import {render, RenderPosition, genarateTown, genaratePrice, genarateDates} from './utils';
+import {render, RenderPosition, generateTown, generatePrice, generateDates} from './utils';
 
 const EVENT_COUNT = 15;
 const DISPLAY_EVENTS_START = 10;
+const ESC_KEYCODE = 27;
+
 const filters = generateFilters();
 
 const events = generateEvents(EVENT_COUNT);
 
-const pointDates = genarateDates(events);
-const point = genarateTown(events);
-const eventsPrice = genaratePrice(events);
+const pointDates = generateDates(events);
+const point = generateTown(events);
+
+const eventsPrice = generatePrice(events);
 
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
@@ -52,7 +55,7 @@ const renderEvent = (eventDayElement, event) => {
   };
 
   const onEscKeyDown = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.keyCode === ESC_KEYCODE || evt.key === `Esc`) {
       eventDayElement.replaceChild(tripEventsItemComponent.getElement(), tripEventsComponent.getElement());
       document.removeEventListener(`keydown`, onEscKeyDown);
     }

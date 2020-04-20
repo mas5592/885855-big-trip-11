@@ -66,25 +66,16 @@ export const shuffleArray = function (array) {
   return array;
 };
 
-export const genarateTown = (events) => {
+export const generateTown = (events) => {
   return events.length <= 3 ? events.map((event) => event.location).join(` — `) : `${events[0].location} — ... — ${events[events.length - 1].location}`;
 };
 
-export const genarateDates = (events) => {
+export const generateDates = (events) => {
   const set = new Set();
   events.forEach((evt) => set.add(JSON.stringify({day: evt.startDate.getDate(), month: TYPE_MONTHS[evt.startDate.getMonth()]})));
   return Array.from(set).map((evt) => JSON.parse(evt));
 };
 
-export const genaratePrice = (arr) => {
-  let principalAmount = 0;
-  let otherAmount = 0;
-  for (let i = 0; i < arr.length; i++) {
-    let checkPointPrice = arr[i].price;
-    principalAmount += checkPointPrice;
-    for (let j = 0; j < arr[i].offers.length; j++) {
-      otherAmount += arr[i].offers[j].price;
-    }
-  }
-  return principalAmount + otherAmount;
+export const generatePrice = (arr) => {
+  return arr.reduce((sum, item) => sum + item.price, 0);
 };
