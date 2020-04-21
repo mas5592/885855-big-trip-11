@@ -13,7 +13,7 @@ export const createInfoBigTripTemplate = (point, days) => {
   );
 };
 
-export default class TripInfo {
+export default class Info {
   constructor(point, days) {
     this._point = point;
     this._days = days;

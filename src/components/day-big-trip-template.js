@@ -18,7 +18,7 @@ export const createDayBigTripTemplate = (date) => {
   );
 };
 
-export default class TripDay {
+export default class Day {
   constructor(date) {
     this._date = date;
     this._element = null;

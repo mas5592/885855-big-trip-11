@@ -21,7 +21,7 @@ export const createFiltersBigTripTemplate = (filters) => {
   );
 };
 
-export default class TripFilter {
+export default class Filter {
   constructor(filters) {
     this._filters = filters;
     this._element = null;

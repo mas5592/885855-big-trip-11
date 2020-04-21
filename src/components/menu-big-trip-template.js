@@ -9,7 +9,7 @@ export const createMenuBigTripTemplate = () => {
   );
 };
 
-export default class TripMenu {
+export default class Menu {
   constructor() {
     this._element = null;
   }

@@ -1,12 +1,12 @@
-import TripInfoComponent from './components/info-big-trip-template';
-import TripInfoCostComponent from './components/cost-value-big-trip-template';
-import TripMenuComponent from './components/menu-big-trip-template';
-import TripFilterComponent from './components/filters-big-trip-template';
-import TripSortComponent from './components/sort-big-trip-template';
-import TripEventsComponent from './components/events-big-trip-template';
-import TripEventsItemComponent from './components/events-item-big-trip-template';
-import TripListComponent from './components/list-big-trip-template';
-import TripDayComponent from './components/day-big-trip-template';
+import InfoComponent from './components/info-big-trip-template';
+import InfoCostComponent from './components/cost-value-big-trip-template';
+import MenuComponent from './components/menu-big-trip-template';
+import FilterComponent from './components/filters-big-trip-template';
+import SortComponent from './components/sort-big-trip-template';
+import EventsComponent from './components/events-big-trip-template';
+import EventsItemComponent from './components/events-item-big-trip-template';
+import ListComponent from './components/list-big-trip-template';
+import DayComponent from './components/day-big-trip-template';
 
 import {generateFilters} from './mock/filter';
 import {generateEvents} from './mock/event';
@@ -30,18 +30,18 @@ const tripMainElement = document.querySelector(`.trip-main`);
 const tripControlsElement = document.querySelector(`.trip-controls`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-render(tripMainElement, new TripInfoComponent(point, pointDates).getElement(), RenderPosition.AFTERBEGIN);
+render(tripMainElement, new InfoComponent(point, pointDates).getElement(), RenderPosition.AFTERBEGIN);
 
 const tripInfoElement = document.querySelector(`.trip-info`);
 
-render(tripInfoElement, new TripInfoCostComponent(eventsPrice).getElement(), RenderPosition.BEFOREEND);
+render(tripInfoElement, new InfoCostComponent(eventsPrice).getElement(), RenderPosition.BEFOREEND);
 
-render(tripControlsElement, new TripMenuComponent().getElement(), RenderPosition.AFTERBEGIN);
+render(tripControlsElement, new MenuComponent().getElement(), RenderPosition.AFTERBEGIN);
 
-render(tripControlsElement, new TripFilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
-render(tripEventsElement, new TripSortComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripControlsElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
-render(tripEventsElement, new TripListComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new ListComponent().getElement(), RenderPosition.BEFOREEND);
 
 const tripDaysElement = document.querySelector(`.trip-days`);
 
@@ -61,7 +61,7 @@ const renderEvent = (eventDayElement, event) => {
     }
   };
 
-  const tripEventsItemComponent = new TripEventsItemComponent(event);
+  const tripEventsItemComponent = new EventsItemComponent(event);
   const openEditButton = tripEventsItemComponent.getElement().querySelector(`.event__rollup-btn`);
 
   openEditButton.addEventListener(`click`, () => {
@@ -69,7 +69,7 @@ const renderEvent = (eventDayElement, event) => {
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  const tripEventsComponent = new TripEventsComponent(event);
+  const tripEventsComponent = new EventsComponent(event);
   const closeEditButton = tripEventsComponent.getElement().querySelector(`.event__rollup-btn`);
 
   closeEditButton.addEventListener(`click`, () => {
@@ -80,7 +80,7 @@ const renderEvent = (eventDayElement, event) => {
 };
 
 const renderEventDay = (day, eventsDay) => {
-  const tripDay = new TripDayComponent(day);
+  const tripDay = new DayComponent(day);
   const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
 
   eventsDay.slice(0, showingEventsCount)

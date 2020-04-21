@@ -140,7 +140,7 @@ export const createEventsBigTripTemplate = (event) => {
   );
 };
 
-export default class TripEvents {
+export default class Events {
   constructor(event) {
     this._event = event;
     this._element = null;
