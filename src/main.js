@@ -1,59 +1,110 @@
-import {
-  createInfoBigTripTemplate
-} from './components/info-big-trip-template';
-import {
-  createCostValueBigTripTemplate
-} from './components/cost-value-big-trip-template';
-import {
-  createMenuBigTripTemplate
-} from './components/menu-big-trip-template';
-import {
-  createFiltersBigTripTemplate
-} from './components/filters-big-trip-template';
-import {
-  createSortBigTripTemplate
-} from './components/sort-big-trip-template';
-import {
-  createEventsItemBigTripTemplate
-} from './components/events-item-big-trip-template';
-import {
-  createEventsBigTripTemplate
-} from './components/events-big-trip-template';
+import TripInfoComponent from './components/info-big-trip-template';
+import TripInfoCostComponent from './components/cost-value-big-trip-template';
+import TripMenuComponent from './components/menu-big-trip-template';
+import TripFilterComponent from './components/filters-big-trip-template';
+import TripSortComponent from './components/sort-big-trip-template';
+import TripEventsComponent from './components/events-big-trip-template';
+import TripEventsItemComponent from './components/events-item-big-trip-template';
+import TripListComponent from './components/list-big-trip-template';
+import TripDayComponent from './components/day-big-trip-template';
 
-import {
-  createListBigTripTemplate
-} from './components/list-big-trip-template';
-import {
-  createDayBigTripTemplate
-} from './components/day-big-trip-template';
+import {generateFilters} from './mock/filter';
+import {generateEvents} from './mock/event';
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+import {render, RenderPosition, generateTown, generatePrice, generateDates} from './utils';
+
+const EVENT_COUNT = 15;
+const DISPLAY_EVENTS_START = 10;
+const ESC_KEYCODE = 27;
+
+const filters = generateFilters();
+
+const events = generateEvents(EVENT_COUNT);
+
+const pointDates = generateDates(events);
+const point = generateTown(events);
+
+const eventsPrice = generatePrice(events);
+
+const tripMainElement = document.querySelector(`.trip-main`);
+const tripControlsElement = document.querySelector(`.trip-controls`);
+const tripEventsElement = document.querySelector(`.trip-events`);
+
+render(tripMainElement, new TripInfoComponent(point, pointDates).getElement(), RenderPosition.AFTERBEGIN);
+
+const tripInfoElement = document.querySelector(`.trip-info`);
+
+render(tripInfoElement, new TripInfoCostComponent(eventsPrice).getElement(), RenderPosition.BEFOREEND);
+
+render(tripControlsElement, new TripMenuComponent().getElement(), RenderPosition.AFTERBEGIN);
+
+render(tripControlsElement, new TripFilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new TripSortComponent().getElement(), RenderPosition.BEFOREEND);
+
+render(tripEventsElement, new TripListComponent().getElement(), RenderPosition.BEFOREEND);
+
+const tripDaysElement = document.querySelector(`.trip-days`);
+
+const renderEvent = (eventDayElement, event) => {
+  const replaceEventToEdit = () => {
+    eventDayElement.replaceChild(tripEventsComponent.getElement(), tripEventsItemComponent.getElement());
+  };
+
+  const replaceEditToEvent = () => {
+    eventDayElement.replaceChild(tripEventsItemComponent.getElement(), tripEventsComponent.getElement());
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.keyCode === ESC_KEYCODE || evt.key === `Esc`) {
+      eventDayElement.replaceChild(tripEventsItemComponent.getElement(), tripEventsComponent.getElement());
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  const tripEventsItemComponent = new TripEventsItemComponent(event);
+  const openEditButton = tripEventsItemComponent.getElement().querySelector(`.event__rollup-btn`);
+
+  openEditButton.addEventListener(`click`, () => {
+    replaceEventToEdit();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  const tripEventsComponent = new TripEventsComponent(event);
+  const closeEditButton = tripEventsComponent.getElement().querySelector(`.event__rollup-btn`);
+
+  closeEditButton.addEventListener(`click`, () => {
+    replaceEditToEvent();
+  });
+
+  render(eventDayElement, tripEventsItemComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const ROUTE_COUNT = 3;
+const renderEventDay = (day, eventsDay) => {
+  const tripDay = new TripDayComponent(day);
+  const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
 
-const siteMainElement = document.querySelector(`.trip-main`);
-const siteControlsElement = document.querySelector(`.trip-controls`);
-const siteEventsElement = document.querySelector(`.trip-events`);
+  eventsDay.slice(0, showingEventsCount)
+    .forEach((event) => {
+      renderEvent(tripDayList, event);
+    });
 
-render(siteMainElement, createInfoBigTripTemplate(), `afterBegin`);
+  render(tripDaysElement, tripDay.getElement(), RenderPosition.BEFOREEND);
+};
 
-const siteInfoElement = document.querySelector(`.trip-info`);
+let showingEventsCount = DISPLAY_EVENTS_START;
+let eventsList = {};
 
-render(siteInfoElement, createCostValueBigTripTemplate(), `beforeEnd`);
-render(siteControlsElement, createMenuBigTripTemplate(), `afterBegin`);
-render(siteControlsElement, createFiltersBigTripTemplate(), `beforeEnd`);
-render(siteEventsElement, createSortBigTripTemplate(), `beforeEnd`);
-render(siteEventsElement, createEventsBigTripTemplate(), `beforeEnd`);
-render(siteEventsElement, createListBigTripTemplate(), `beforeEnd`);
+events.slice(0, showingEventsCount)
+  .forEach((event) => {
+    const date = `${event.startDate.getFullYear()}-${event.startDate.getMonth() + 1}-${event.startDate.getDate()}`;
 
-const siteDaysElement = document.querySelector(`.trip-days`);
+    if (eventsList.hasOwnProperty(date)) {
+      eventsList[date].push(event);
+    } else {
+      eventsList[date] = [event];
+    }
+  });
 
-render(siteDaysElement, createDayBigTripTemplate(), `beforeEnd`);
-
-const siteListElement = document.querySelector(`.trip-events__list`);
-
-for (let i = 0; i < ROUTE_COUNT; i++) {
-  render(siteListElement, createEventsItemBigTripTemplate(), `beforeend`);
+for (let [key, value] of Object.entries(eventsList)) {
+  renderEventDay(key, value);
 }
