@@ -8,7 +8,7 @@ export const createCostValueBigTripTemplate = (price) => {
   );
 };
 
-export default class TripInfoCost {
+export default class InfoCost {
   constructor(price) {
     this._price = price;
     this._element = null;

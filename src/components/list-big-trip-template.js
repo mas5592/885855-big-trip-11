@@ -7,7 +7,7 @@ export const createListBigTripTemplate = () => {
   );
 };
 
-export default class TripList {
+export default class List {
   constructor() {
     this._element = null;
   }

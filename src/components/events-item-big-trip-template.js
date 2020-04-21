@@ -50,7 +50,7 @@ export const createEventsItemBigTripTemplate = (event) => {
   );
 };
 
-export default class TripEventsItem {
+export default class EventsItem {
   constructor(event) {
     this._event = event;
     this._element = null;
