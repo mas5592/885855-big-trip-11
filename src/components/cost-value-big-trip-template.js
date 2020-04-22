@@ -1,32 +1,14 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract.js';
 
-export const createCostValueBigTripTemplate = (price) => {
-  return (
-    `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${price}</span>
-    </p>`
-  );
-};
-
-export default class InfoCost {
+export default class InfoCost extends AbstractComponent {
   constructor(price) {
+    super();
     this._price = price;
-    this._element = null;
   }
 
   getTemplate() {
-    return createCostValueBigTripTemplate(this._price);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return `<p class="trip-info__cost">
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${this._price}</span>
+    </p>`.trim();
   }
 }

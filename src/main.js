@@ -7,17 +7,13 @@ import EventsComponent from './components/events-big-trip-template';
 import EventsItemComponent from './components/events-item-big-trip-template';
 import ListComponent from './components/list-big-trip-template';
 import DayComponent from './components/day-big-trip-template';
-
-import {generateFilters} from './mock/filter';
 import {generateEvents} from './mock/event';
 
 import {render, RenderPosition, generateTown, generatePrice, generateDates} from './utils';
 
 const EVENT_COUNT = 15;
-const DISPLAY_EVENTS_START = 10;
-const ESC_KEYCODE = 27;
 
-const filters = generateFilters();
+const ESC_KEYCODE = 27;
 
 const events = generateEvents(EVENT_COUNT);
 
@@ -38,7 +34,7 @@ render(tripInfoElement, new InfoCostComponent(eventsPrice).getElement(), RenderP
 
 render(tripControlsElement, new MenuComponent().getElement(), RenderPosition.AFTERBEGIN);
 
-render(tripControlsElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+render(tripControlsElement, new FilterComponent().getElement(), RenderPosition.BEFOREEND);
 render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 
 render(tripEventsElement, new ListComponent().getElement(), RenderPosition.BEFOREEND);
@@ -83,7 +79,7 @@ const renderEventDay = (day, eventsDay) => {
   const tripDay = new DayComponent(day);
   const tripDayList = tripDay.getElement().querySelector(`.trip-events__list`);
 
-  eventsDay.slice(0, showingEventsCount)
+  eventsDay.slice()
     .forEach((event) => {
       renderEvent(tripDayList, event);
     });
@@ -91,10 +87,10 @@ const renderEventDay = (day, eventsDay) => {
   render(tripDaysElement, tripDay.getElement(), RenderPosition.BEFOREEND);
 };
 
-let showingEventsCount = DISPLAY_EVENTS_START;
+
 let eventsList = {};
 
-events.slice(0, showingEventsCount)
+events.slice()
   .forEach((event) => {
     const date = `${event.startDate.getFullYear()}-${event.startDate.getMonth() + 1}-${event.startDate.getDate()}`;
 

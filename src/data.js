@@ -130,3 +130,9 @@ export const PHOTOS = [
   `http://picsum.photos/248/152?r=${Math.random()}`
 ];
 
+export const FILTER_NAMES = [
+  `everything`,
+  `future`,
+  `past`,
+];
+

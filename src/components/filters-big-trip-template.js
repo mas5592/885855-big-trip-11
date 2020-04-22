@@ -1,45 +1,22 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract.js';
+import {FILTER_NAMES} from '../data';
 
 const createFilterMarkup = (filter, isChecked) => {
-  return `<div class="trip-filters__filter">
-    <input
-      id="filter-everything"
-      class="trip-filters__filter-input  visually-hidden"
-      type="radio"
-      name="trip-filter"
-      value="${filter}" ${isChecked ? `checked` : ``}>
-    <label class="trip-filters__filter-label" for="filter-everything">${filter}</label>
-  </div>`;
-};
-
-export const createFiltersBigTripTemplate = (filters) => {
   return (
-    `<form class="trip-filters" action="#" method="get">
-      ${filters.map((filter, i) => createFilterMarkup(filter, i === 0)).join(`\n`)}
-      <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>`
+    `<div class="trip-filters__filter">
+      <input id="filter-${filter.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.toLowerCase()}" ${isChecked === 0 ? `checked` : ``}>
+      <label class="trip-filters__filter-label" for="filter-${filter.toLowerCase()}">${filter}</label>
+    </div>`
   );
 };
 
-export default class Filter {
-  constructor(filters) {
-    this._filters = filters;
-    this._element = null;
-  }
-
-  getTempate() {
-    return createFiltersBigTripTemplate(this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTempate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+export default class Filter extends AbstractComponent {
+  getTemplate() {
+    const filterMarkup = FILTER_NAMES.map((i, isChecked) => createFilterMarkup(i, isChecked)).join(`\n`);
+    return `<form class="trip-filters" action="#" method="get">
+        ${filterMarkup}
+        <button class="visually-hidden" type="submit">Accept filter</button>
+     </form>`
+     .trim();
   }
 }
