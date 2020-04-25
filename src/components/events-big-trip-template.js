@@ -1,5 +1,6 @@
 import {TYPE_ITEMS} from '../data';
-import {createElement, formatTime} from '../utils';
+import {formatTime} from '../utils';
+import {createElement} from '../utils/render.js';
 import AbstractComponent from './abstract.js';
 
 const createEventList = (active) => {

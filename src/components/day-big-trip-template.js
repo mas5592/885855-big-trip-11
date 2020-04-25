@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract.js';
-import {createElement} from '../utils';
+import {createElement} from '../utils/render.js';
 import {TYPE_MONTHS} from '../data';
 
 export default class Day extends AbstractComponent {
