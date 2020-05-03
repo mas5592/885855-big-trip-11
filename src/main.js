@@ -1,26 +1,26 @@
-import InfoComponent from './components/info-big-trip-template';
-import InfoCostComponent from './components/cost-value-big-trip-template';
-import MenuComponent from './components/menu-big-trip-template';
-import FilterComponent from './components/filters-big-trip-template';
-import ListComponent from './components/list-big-trip-template';
-import SortComponent from './components/sort-big-trip-template';
+import InfoComponent from './components/info-component';
+import InfoCostComponent from './components/info-cost-component';
+import FilterComponent from './components/filter-component';
+import TripController from './controllers/trip-controller';
+import MenuComponent from './components/menu-component';
 
-import {generateEvents} from './mock/event';
+import {generateEvents} from './mock/event-mock';
+import {generatePrice, generateTown} from './utils/info';
+import {generateDates} from './utils/time';
+import {generateInfoTown} from './mock/info-mock';
 
-import {generateTown, generatePrice, generateDates} from './utils';
-import {render, RenderPosition} from './utils/render.js';
+import {render, RenderPosition} from './utils/render';
 
-import RoutesController from './controllers/events';
+const EVENTS_COUNT = 15;
 
-const EVENT_COUNT = 15;
 
-const events = generateEvents(EVENT_COUNT);
+const points = generateInfoTown();
+const events = generateEvents(EVENTS_COUNT, points);
 const pointDates = generateDates(events);
 const point = generateTown(events);
 const eventsPrice = generatePrice(events);
 
 const tripMainElement = document.querySelector(`.trip-main`);
-
 render(tripMainElement, new InfoComponent(point, pointDates), RenderPosition.AFTERBEGIN);
 
 const tripControlsElement = document.querySelector(`.trip-controls`);
@@ -33,14 +33,6 @@ render(tripControlsElement, new MenuComponent(), RenderPosition.AFTERBEGIN);
 
 render(tripControlsElement, new FilterComponent(), RenderPosition.BEFOREEND);
 
-
 const tripEventsElement = document.querySelector(`.trip-events`);
-
-const listComponent = new ListComponent();
-
-const routesController = new RoutesController(listComponent);
-
-render(tripEventsElement, listComponent, RenderPosition.BEFOREEND);
-routesController.render(events);
-
-render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+const trip = new TripController(tripEventsElement);
+trip.render(events, points);

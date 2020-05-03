@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract.js';
+import AbstractComponent from './abstract-component';
 
 export default class Info extends AbstractComponent {
   constructor(point, days) {
@@ -18,3 +18,4 @@ export default class Info extends AbstractComponent {
   .trim();
   }
 }
+

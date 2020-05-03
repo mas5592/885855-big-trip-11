@@ -1,10 +1,10 @@
-import {TYPE_ITEMS} from '../data';
-import {formatTime} from '../utils';
-import {createElement} from '../utils/render.js';
-import AbstractComponent from './abstract.js';
+import {TYPE_POINTS_TRANSPORT} from '../data';
+import {formatTime} from '../utils/time';
+import AbstractSmartComponent from './abstact-smart-component';
+import {getRandomOffers} from '../mock/offers-mock';
 
 const createEventList = (active) => {
-  return TYPE_ITEMS.map((item) => {
+  return TYPE_POINTS_TRANSPORT.map((item) => {
     return `<div class="event__type-item">
         <input
           id="event-type-${item.toLocaleLowerCase()}-1"
@@ -20,21 +20,17 @@ const createEventList = (active) => {
 
 const createOffersList = (offers) => {
   return offers.map((offer) => {
-    const {
-      currency,
-      isChecked,
-      price,
-      title,
-    } = offer;
-    return `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isChecked ? `checked` : ``}>
-        <label class="event__offer-label" for="event-offer-luggage-1">
-          <span class="event__offer-title">${title}</span>
-          ${currency}
-          <span class="event__offer-price">&euro;&nbsp;${price}</span>
+    return (`
+      <div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.type}-1" type="checkbox" name="event-offer-${offer.type}" checked>
+        <label class="event__offer-label" for="event-offer-${offer.type}-1">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;
+        &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
         </label>
-      </div>`;
-  }).join(`\n`);
+      </div>`
+    );
+  }).join(``);
 };
 
 const createDestinationDescriptions = (descriptions) => {
@@ -45,7 +41,7 @@ const createDestinationPhoto = (photos) => {
   return photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(`\n`);
 };
 
-export default class Events extends AbstractComponent {
+export default class Events extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
@@ -63,10 +59,12 @@ export default class Events extends AbstractComponent {
       type,
     } = this._event;
 
+
     const timeStart = formatTime(startDate, true);
     const timeEnd = formatTime(endDate, true);
 
     const offersList = createOffersList(offers);
+
     const eventList = createEventList(type);
     const descriptionDestination = createDestinationDescriptions(destinationDescription);
     const photoDestination = createDestinationPhoto(destinationPhoto);
@@ -92,7 +90,6 @@ export default class Events extends AbstractComponent {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${location}" list="destination-list-1">
         <datalist id="destination-list-1">
-
         </datalist>
       </div>
       <div class="event__field-group  event__field-group--time">
@@ -146,11 +143,58 @@ export default class Events extends AbstractComponent {
   </form>`.trim();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  recoveryListeners() {
+    this._subscribeOnEvents();
+    this.setSubmitHandler(this._submitHandler);
+    this.setFavoritesButtonClickHandler(this._FavoriteHandler);
 
-    return this._element;
+    this.setClickHandler(this._clickHandler);
+  }
+
+  setSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
+    this._submitHandler = handler;
+  }
+
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, handler);
+    this._FavoriteHandler = handler;
+  }
+
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._clickHandler = handler;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelectorAll(`.event__type-input`).forEach((input) => {
+      input.addEventListener(`change`, (evt) => {
+        this._type = evt.target.value;
+        this.rerender();
+      });
+    });
+
+    element.querySelector(`.event__input--destination`).addEventListener(`change`, (evt) => {
+      if (this._points.find((it) => it.location === evt.target.value)) {
+        this._location = evt.target.value;
+        this._offers = getRandomOffers();
+
+        this.rerender();
+      }
+    });
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  reset() {
+    this._event = this._event;
+    this._type = this._event.type;
+    this._location = this._event.info.location;
+    this.rerender();
   }
 }

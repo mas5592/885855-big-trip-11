@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract.js';
+import AbstractComponent from './abstract-component';
 
 export default class InfoCost extends AbstractComponent {
   constructor(price) {
