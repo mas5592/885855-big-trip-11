@@ -1,26 +1,14 @@
 import {
-  getRandomOptions,
   PHOTOS,
-  TYPE_CITY,
-  TYPE_ITEMS,
   DESCRIPTIONS,
+  TYPE_ITEMS
 } from '../data';
-
-import {shuffleArray} from '../utils';
-
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length);
-
-  return array[randomIndex];
-};
-
-const getRandomIntegerNumber = (min, max) => {
-  return min + Math.floor(Math.random() * (max - min));
-};
+import {getRandomOffers} from './offers-mock';
+import {getRandomIntegerNumber, getRandomArrayItem, shuffleArray} from '../utils/random';
 
 const getRandomDate = (date) => {
   const selectedDate = new Date(date);
-  const diffDays = getRandomIntegerNumber(0, 5);
+  const diffDays = getRandomIntegerNumber(0, 2);
   const diffMinutes = getRandomIntegerNumber(0, 90);
 
   selectedDate.setDate(selectedDate.getDate() + diffDays);
@@ -29,14 +17,16 @@ const getRandomDate = (date) => {
   return selectedDate;
 };
 
-export const generateEvent = () => {
+const generateEvent = (point) => {
   const startDate = getRandomDate(new Date());
+  const type = getRandomArrayItem(TYPE_ITEMS);
+  const info = getRandomArrayItem(point);
   return {
-    type: getRandomArrayItem(TYPE_ITEMS),
-    location: TYPE_CITY.pop(),
-    offers: shuffleArray(getRandomOptions()).slice(Math.random() * getRandomOptions().length),
+    type,
+    offers: getRandomOffers(),
     destinationDescription: shuffleArray(DESCRIPTIONS).slice(Math.random() * DESCRIPTIONS.length),
     destinationPhoto: shuffleArray(PHOTOS).slice(Math.random() * PHOTOS.length),
+    info,
     startDate,
     endDate: getRandomDate(startDate),
     price: getRandomIntegerNumber(10, 1000),
@@ -44,9 +34,9 @@ export const generateEvent = () => {
   };
 };
 
-export const generateEvents = (count) => {
+export const generateEvents = (count, point) => {
   return new Array(count)
     .fill(``)
-    .map(generateEvent)
+    .map(() => generateEvent(point))
     .sort((a, b) => a.startDate > b.startDate ? 1 : -1);
 };

@@ -1,5 +1,5 @@
-import AbstractComponent from './abstract.js';
-import {FILTER_NAMES} from '../data';
+import AbstractComponent from './abstract-component';
+import {FILTERS_DATA} from '../data';
 
 const createFilterMarkup = (filter, isChecked) => {
   return (
@@ -12,7 +12,7 @@ const createFilterMarkup = (filter, isChecked) => {
 
 export default class Filter extends AbstractComponent {
   getTemplate() {
-    const filterMarkup = FILTER_NAMES.map((i, isChecked) => createFilterMarkup(i, isChecked)).join(`\n`);
+    const filterMarkup = FILTERS_DATA.map((i, isChecked) => createFilterMarkup(i, isChecked)).join(`\n`);
     return `<form class="trip-filters" action="#" method="get">
         ${filterMarkup}
         <button class="visually-hidden" type="submit">Accept filter</button>
