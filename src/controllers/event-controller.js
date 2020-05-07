@@ -5,7 +5,7 @@ import {Mode} from '../mock/mode-mock';
 
 const ESC_KEYCODE = 27;
 
-export default class EventController {
+export default class PointController {
   constructor(container, onDataChange, onViewChange, points, types) {
     this._container = container;
     this._onDataChange = onDataChange;
