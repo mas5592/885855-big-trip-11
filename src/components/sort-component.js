@@ -47,18 +47,20 @@ export default class Sort extends AbstractComponent {
 
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
 
       if (evt.target.tagName !== `LABEL`) {
         return;
       }
 
       const sortType = evt.target.dataset.sortType;
+      evt.target.checked = true;
 
       if (this._currenSortType === sortType) {
         return;
       }
 
+      const ItemDay = this._element.querySelector(`.trip-sort__item--day`);
+      ItemDay.style.visibility = sortType === `event` ? `visible` : `hidden`;
       this._currenSortType = sortType;
 
       handler(this._currenSortType);

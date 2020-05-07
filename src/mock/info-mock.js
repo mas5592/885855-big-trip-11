@@ -19,6 +19,6 @@ export const generateInfoTown = () => {
   });
 };
 
-const getRandomDescription = () => {
+export const getRandomDescription = () => {
   return shuffleArray(DESCRIPTIONS).slice(Math.random() * DESCRIPTIONS.length);
 };
