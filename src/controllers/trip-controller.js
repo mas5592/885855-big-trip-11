@@ -114,4 +114,3 @@ export default class TripController {
     this._showedEventControllers.forEach((it) => it.setDefaultView());
   }
 }
-

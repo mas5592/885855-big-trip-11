@@ -2,6 +2,7 @@ import {TYPE_POINTS_TRANSPORT} from '../data';
 import {formatTime} from '../utils/time';
 import AbstractSmartComponent from './abstact-smart-component';
 import {getRandomOffers} from '../mock/offers-mock';
+import {getRandomDescription} from '../mock/info-mock';
 
 const createEventList = (active) => {
   return TYPE_POINTS_TRANSPORT.map((item) => {
@@ -33,10 +34,6 @@ const createOffersList = (offers) => {
   }).join(``);
 };
 
-const createDestinationDescriptions = (descriptions) => {
-  return descriptions.map((description) => `<p class="event__destination-description">${description}</p>`).join(`\n`);
-};
-
 const createDestinationPhoto = (photos) => {
   return photos.map((photo) => `<img class="event__photo" src="${photo}" alt="Event photo">`).join(`\n`);
 };
@@ -49,7 +46,6 @@ export default class Events extends AbstractSmartComponent {
 
   getTemplate() {
     const {
-      destinationDescription,
       destinationPhoto,
       endDate,
       location,
@@ -59,14 +55,15 @@ export default class Events extends AbstractSmartComponent {
       type,
     } = this._event;
 
-
     const timeStart = formatTime(startDate, true);
     const timeEnd = formatTime(endDate, true);
 
     const offersList = createOffersList(offers);
 
     const eventList = createEventList(type);
-    const descriptionDestination = createDestinationDescriptions(destinationDescription);
+
+    const description = getRandomDescription();
+
     const photoDestination = createDestinationPhoto(destinationPhoto);
 
     return `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -124,22 +121,22 @@ export default class Events extends AbstractSmartComponent {
       </button>
     </header>
     <section class="event__details">
-      ${offers.length > 0 ? `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
+        <section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers">
           ${offersList}
-        </div>
-      </section>` : ``}
-      ${destinationDescription.length > 0 || destinationPhoto > 0 ? `<section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        ${descriptionDestination}
-        <div class="event__photos-container">
-          <div class="event__photos-tape">
-            ${photoDestination}
           </div>
-        </div>
-      </section>` : ``}
-    </section>
+        </section>
+        <section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          <p class="event__destination-description">${description}</p>
+          <div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${photoDestination}
+            </div>
+          </div>
+        </section>
+      </section>
   </form>`.trim();
   }
 
@@ -194,6 +191,7 @@ export default class Events extends AbstractSmartComponent {
   reset() {
     this._event = this._event;
     this._type = this._event.type;
+    this._description = event.description;
     this._location = this._event.info.location;
     this.rerender();
   }
