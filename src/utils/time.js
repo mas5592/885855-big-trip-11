@@ -1,30 +1,21 @@
-import {TYPE_MONTHS} from '../data';
 
-const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
-};
+import moment from 'moment';
 
-export const formatTime = (date, forForm = false) => {
-  const year = castTimeFormat(date.getUTCFullYear()) % 2000;
-  const month = castTimeFormat(date.getMonth());
-  const day = castTimeFormat(date.getDate());
-  const hour = castTimeFormat(date.getHours() % 12);
-  const minute = castTimeFormat(date.getMinutes());
+export const formatTime = (date) => moment(date).format(`HH:mm`);
 
-  return forForm ? `${day}/${month}/${year} ${hour}:${minute}` : `${hour}:${minute}`;
-};
+export const formatInfoDateTime = (date) => moment(date).format(`DD MMM`);
+
+export const formatDateTime = (date) => moment(date).format(`YYYY MMM DD`);
+
+export const formatDateWithoutTime = (dateString) => moment(dateString, `YYYY MMM DD`).valueOf();
+
+export const formatStatisticsTime = (time1, time2) => moment(time2).diff(moment(time1), `hours`);
 
 export const formatDurationTime = (timeDiff) => {
-  const time = Math.trunc((timeDiff) / 60000);
-  const minutes = time % 60;
-  const days = Math.trunc((time - minutes) / 1440);
-  const hours = Math.trunc((time - minutes) / 60 - days * 24);
+  const duration = moment.duration(timeDiff);
+  const days = duration.days();
+  const hours = duration.hours();
+  const minutes = duration.minutes();
 
   return `${days > 0 ? days + `D` : ``} ${hours > 0 ? hours + `H` : ``} ${minutes > 0 ? minutes + `M` : ``}`;
-};
-
-export const generateDates = (events) => {
-  const set = new Set();
-  events.forEach((evt) => set.add(JSON.stringify({day: evt.startDate.getDate(), month: TYPE_MONTHS[evt.startDate.getMonth()]})));
-  return Array.from(set).map((evt) => JSON.parse(evt));
 };
