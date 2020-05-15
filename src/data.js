@@ -1,8 +1,52 @@
-export const FILTERS_DATA = [
-  `Everything`,
-  `Future`,
-  `Past`
-];
+export const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
+
+export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
+
+export const HIDDEN_CLASS = `visually-hidden`;
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
+
+export const ESC_KEYCODE = 27;
+
+export const TypeRoutePoint = {
+  TRANSFER: [
+    `Bus`,
+    `Drive`,
+    `Flight`,
+    `Ship`,
+    `Taxi`,
+    `Train`,
+    `Transport`
+  ],
+  ACTIVITY: [
+    `Check-in`,
+    `Restaurant`,
+    `Sightseeing`
+  ]
+};
+
+export const FilterType = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
+};
+
+export const Method = {
+  DELETE: `DELETE`,
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`
+};
+
+export const ButtonsTextDefault = {
+  DELETE: `Delete`,
+  SAVE: `Save`
+};
+
+export const ConnectingButtonsText = {
+  DELETE: `Deleting...`,
+  SAVE: `Saving...`
+};
 
 export const TYPE_POINTS_TRANSPORT = [
   `Bus`,
@@ -14,110 +58,19 @@ export const TYPE_POINTS_TRANSPORT = [
   `Transport`,
 ];
 
-export const TYPE_ITEMS = [
-  `Bus`,
-  `Check-in`,
-  `Drive`,
-  `Flight`,
-  `Ship`,
-  `Sightseeing`,
-  `Taxi`,
-  `Train`,
-  `Transport`,
-];
+export const SORT_TYPE = {
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`
+};
 
-export const TYPE_POINTS_ACTIVITY = [
-  `Check-in`,
-  `Sightseeing`,
-  `Restaurant`
-];
+export const MenuItem = {
+  STATS: `stats`,
+  TABLE: `table`
+};
 
-export const PHOTOS = [
-  `http://picsum.photos/248/152?r=${Math.random()}`,
-  `http://picsum.photos/248/152?r=${Math.random()}`,
-  `http://picsum.photos/248/152?r=${Math.random()}`,
-  `http://picsum.photos/248/152?r=${Math.random()}`,
-  `http://picsum.photos/248/152?r=${Math.random()}`
-];
-
-export const DESCRIPTIONS = [
-  `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  `Cras aliquet varius magna, non porta ligula feugiat eget.`,
-  `Fusce tristique felis at fermentum pharetra.`,
-  `Aliquam id orci ut lectus varius viverra.`,
-  `Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.`,
-  `Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.`,
-  `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
-  `Sed sed nisi sed augue convallis suscipit in sed felis.`,
-  `Aliquam erat volutpat.`,
-  `Nunc fermentum tortor ac porta dapibus.`,
-  `In rutrum ac purus sit amet tempus.`
-];
-
-
-export const TYPE_LOCATION = [
-  `Amsterdam`,
-  `Athens`,
-  `Brest`,
-  `Chicago`,
-  `Giza`,
-  `Houston`,
-  `Istanbul`,
-  `Milan`,
-  `Minsk`,
-  `Moscow`,
-  `Phoenix`,
-  `Prague`,
-  `Pushchino`,
-  `Riga`,
-  `Rome`,
-  `Seoul`,
-  `Shanghai`,
-  `Tokyo`,
-  `Valencia`,
-  `Yangon`,
-  `Zurich`,
-];
-
-export const TYPE_MONTHS = [
-  `JAN`,
-  `FEB`,
-  `MAR`,
-  `APR`,
-  `MAY`,
-  `JUN`,
-  `JUL`,
-  `AUG`,
-  `SEP`,
-  `OCT`,
-  `NOV`,
-  `DEC`
-];
-
-export const OFFERS = [
-  {
-    type: `seats`,
-    title: `Choose seats`,
-    price: 5
-  },
-  {
-    type: `meal`,
-    title: `Add meal`,
-    price: 15
-  },
-  {
-    type: `luggage`,
-    title: `Add luggage`,
-    price: 30
-  },
-  {
-    type: `train`,
-    title: `Travel by train`,
-    price: 40
-  },
-  {
-    type: `comfort`,
-    title: `Switch to comfort class`,
-    price: 100
-  }
-];
+export const Mode = {
+  ADD: `add`,
+  DEFAULT: `default`,
+  EDIT: `edit`
+};

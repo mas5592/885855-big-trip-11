@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component';
+import AbstractComponent from './abstract-component.js';
 
 export default class NoEvents extends AbstractComponent {
   getTemplate() {

@@ -1,21 +1,35 @@
-import AbstractComponent from './abstract-component';
+import AbstractSmartComponent from './abstract-smart-component.js';
+import {formatInfoDateTime} from '../utils/time.js';
+import {generateTown} from '../utils/info.js';
 
-export default class Info extends AbstractComponent {
-  constructor(point, days) {
+export default class TripInfo extends AbstractSmartComponent {
+  constructor(events) {
     super();
-    this._point = point;
-    this._days = days;
+    this._events = events;
   }
 
   getTemplate() {
-    const date = `${this._days.length ? `${this._days[0].month} ${this._days[0].day}&nbsp;&nbsp;&mdash;&nbsp;${this._days[0].month !== this._days[this._days.length - 1].month ? this._days[this._days.length - 1].month : ``} ${this._days[this._days.length - 1].day}` : ``}`;
-    return `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${this._point}</h1>
-      <p class="trip-info__dates">${date}</p>
-    </div>
-  </section>`
-  .trim();
+    if (this._events.length === 0) {
+      return `<div></div>`;
+    }
+
+    const startRouteDate = formatInfoDateTime(this._events[0].startDate);
+    const endRouteDate = formatInfoDateTime(this._events[this._events.length - 1].endDate);
+
+    const point = generateTown(this._events);
+    const date = `${startRouteDate}&nbsp;&nbsp;&mdash;&nbsp;${endRouteDate}`;
+
+    return `<div class="trip-info__main">
+        <h1 class="trip-info__title">${point}</h1>
+        <p class="trip-info__dates">${date}</p>
+      </div>`;
+  }
+
+  recoveryListeners() {}
+
+  setEvents(events) {
+    this._events = events.slice().sort((a, b) => a.startDate - b.startDate);
+
+    super.rerender();
   }
 }
-
