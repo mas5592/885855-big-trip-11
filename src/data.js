@@ -6,6 +6,8 @@ export const HIDDEN_CLASS = `visually-hidden`;
 
 export const SHAKE_ANIMATION_TIMEOUT = 600;
 
+export const SERVER_TIMEOUT = 10000;
+
 export const ESC_KEYCODE = 27;
 
 export const TypeRoutePoint = {
@@ -73,4 +75,19 @@ export const Mode = {
   ADD: `add`,
   DEFAULT: `default`,
   EDIT: `edit`
+};
+
+export const StoreInfo = {
+  STORE_PREFIX: `big-trip-localstorage`,
+  STORE_VER: `v1`,
+
+  getStoreName(key) {
+    return `${this.STORE_PREFIX}-${this.STORE_VER}-${key}`;
+  }
+};
+
+export const StoreKey = {
+  DESTINATIONS: `destinations`,
+  POINTS: `points`,
+  OFFERS: `offers`,
 };

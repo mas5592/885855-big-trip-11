@@ -1,6 +1,5 @@
-import {Method} from './data';
-import EventModel from './models/point-model';
-
+import {Method, SERVER_TIMEOUT} from '../data';
+import EventModel from '../models/point-model';
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -41,11 +40,14 @@ export default class API {
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(checkStatus)
-      .catch((err) => {
-        throw err;
-      });
+    return Promise.race([
+      fetch(`${this._endPoint}/${url}`, {method, body, headers}),
+      new Promise((resolve) => setTimeout(resolve, SERVER_TIMEOUT))
+    ])
+   .then(checkStatus)
+   .catch((err) => {
+     throw err;
+   });
   }
 
   updateEvent(id, data) {
@@ -61,5 +63,15 @@ export default class API {
 
   deleteEvent(id) {
     return this._load({url: `points/${id}`, method: Method.DELETE});
+  }
+
+  sync(data) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json());
   }
 }
