@@ -36,7 +36,16 @@ export default class API {
     })
       .then((response) => response.json())
       .then(EventModel.parseEvent);
+  }
 
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(checkStatus)
+      .catch((err) => {
+        throw err;
+      });
   }
 
   updateEvent(id, data) {
@@ -52,15 +61,5 @@ export default class API {
 
   deleteEvent(id) {
     return this._load({url: `points/${id}`, method: Method.DELETE});
-  }
-
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(checkStatus)
-      .catch((err) => {
-        throw err;
-      });
   }
 }

@@ -1,4 +1,4 @@
-export const AUTHORIZATION = `Basic er883jdzbdw=${Math.random()}`;
+export const AUTHORIZATION = `Basic sbsrgr344tytetgsbrw4`;
 
 export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
