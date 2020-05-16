@@ -1,4 +1,4 @@
-export default class Store {
+export default class AppStore {
   constructor() {
     this._destinations = [];
     this._offers = [];
