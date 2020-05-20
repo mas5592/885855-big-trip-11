@@ -10,9 +10,9 @@ export default class Filter extends AbstractComponent {
     return (
       `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
-      ${this._filters.map(({name, checked}) => {
+      ${this._filters.map(({name, checked, disabled}) => {
         return (
-          `<input id="filter-${name}" data-filter="${name}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name}" ${checked ? `checked` : ``}>
+          `<input id="filter-${name}" data-filter="${name}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name}" ${checked ? `checked` : ``} ${disabled ? `disabled` : ``}>
           <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>`
         );
       }).join(`\n`)}

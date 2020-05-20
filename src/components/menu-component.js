@@ -17,7 +17,7 @@ export default class Menu extends AbstractComponent {
     );
   }
 
-  setOnMenuChange(handler) {
+  setMenuChangeHandler(handler) {
     const menu = this.getElement();
     menu.addEventListener(`click`, ((evt) => {
       if (evt.target.tagName !== `A`) {

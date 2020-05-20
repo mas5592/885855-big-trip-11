@@ -1,7 +1,6 @@
 import AbstractComponent from './abstract-component.js';
-import {formatTime, formatDurationTime} from '../utils/time.js';
-import {formatTypeRoutePoint} from '../utils/common.js';
-import {Mode} from '../data.js';
+import {EmptyEvent, formatTypeRoute, Mode} from '../utils/common.js';
+import {formatTime, formatDateTimeAttr, formatDurationTime} from '../utils/time.js';
 
 export default class EventItem extends AbstractComponent {
   constructor(event, mode) {
@@ -11,8 +10,9 @@ export default class EventItem extends AbstractComponent {
   }
 
   getTemplate() {
-    const {offers, destination, startDate, endDate, price} = this._event;
-    const type = this._mode !== Mode.ADD ? this._event.type : `flight`;
+    const {destination, endDate, offers, price, startDate} = this._event;
+    const type = this._mode !== Mode.ADD ? this._event.type : EmptyEvent.type;
+    const timeDiff = endDate - startDate;
 
     return (
       `<li class="trip-events__item">
@@ -20,30 +20,28 @@ export default class EventItem extends AbstractComponent {
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
           </div>
-          <h3 class="event__title">${formatTypeRoutePoint(type)} ${destination.name}</h3>
+          <h3 class="event__title">${formatTypeRoute(type)} ${destination.name}</h3>
           <div class="event__schedule">
             <p class="event__time">
-              <time class="event__start-time" datetime="2019-03-18T11:00">${formatTime(startDate)}</time>
+              <time class="event__start-time" datetime="${formatDateTimeAttr(startDate)}">${formatTime(startDate)}</time>
               &mdash;
-              <time class="event__end-time" datetime="2019-03-18T11:00">${formatTime(endDate)}</time>
+              <time class="event__end-time" datetime="${formatDateTimeAttr(endDate)}">${formatTime(endDate)}</time>
             </p>
-            <p class="event__duration">${formatDurationTime(startDate, endDate)}</p>
+            <p class="event__duration">${formatDurationTime(timeDiff)}</p>
           </div>
           <p class="event__price">
             &euro;&nbsp;<span class="event__price-value">${price}</span>
           </p>
           <h4 class="visually-hidden">Offers:</h4>
-          <ul class="event__selected-offers">
-      ${offers
-        .map(({title, price: offerPrice}) => {
-          return (
-            `<li class="event__offer">
+          <ul class="event__selected-offers">${offers.map(({title, price: offerPrice}) => {
+        return (
+          `<li class="event__offer">
               <span class="event__offer-title">${title}</span>
               &plus;
               &euro;&nbsp;<span class="event__offer-price">${offerPrice}</span>
             </li>`
-          );
-        }).slice(0, 2).join(`\n`)}
+        );
+      }).slice(0, 2).join(`\n`)}
           </ul>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
@@ -53,7 +51,7 @@ export default class EventItem extends AbstractComponent {
     );
   }
 
-  setOnEditButtonClick(handler) {
+  setArrowHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`)
       .addEventListener(`click`, handler);
   }

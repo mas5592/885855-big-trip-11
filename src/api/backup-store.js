@@ -1,4 +1,4 @@
-export default class backupStore {
+export default class BackupStore {
   constructor(storage) {
     this._storage = storage;
     this._storeKey = null;

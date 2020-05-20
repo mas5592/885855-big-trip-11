@@ -1,5 +1,5 @@
-import {Method, SERVER_TIMEOUT} from '../data';
-import EventModel from '../models/point-model';
+import {Method, Timeout} from '../data.js';
+import EventModel from '../models/event-model.js';
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -11,8 +11,8 @@ const checkStatus = (response) => {
 
 export default class API {
   constructor(endPoint, authorization) {
-    this._authorization = authorization;
     this._endPoint = endPoint;
+    this._authorization = authorization;
   }
 
   getData({url}) {
@@ -35,19 +35,7 @@ export default class API {
     })
       .then((response) => response.json())
       .then(EventModel.parseEvent);
-  }
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
-    headers.append(`Authorization`, this._authorization);
-
-    return Promise.race([
-      fetch(`${this._endPoint}/${url}`, {method, body, headers}),
-      new Promise((resolve) => setTimeout(resolve, SERVER_TIMEOUT))
-    ])
-   .then(checkStatus)
-   .catch((err) => {
-     throw err;
-   });
   }
 
   updateEvent(id, data) {
@@ -73,5 +61,18 @@ export default class API {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json());
+  }
+
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+
+    return Promise.race([
+      fetch(`${this._endPoint}/${url}`, {method, body, headers}),
+      new Promise((resolve) => setTimeout(resolve, Timeout.SERVER))
+    ])
+   .then(checkStatus)
+   .catch((err) => {
+     throw err;
+   });
   }
 }

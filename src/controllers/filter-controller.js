@@ -1,5 +1,6 @@
-import {render, replace} from '../utils/render.js';
 import FilterComponent from '../components/filter-component.js';
+import {render, replace} from '../utils/render.js';
+import {getFilteredEvents} from '../utils/filter.js';
 import {FilterType} from '../data.js';
 
 export default class FilterController {
@@ -17,16 +18,17 @@ export default class FilterController {
   }
 
   render() {
-    const filters = Object.values(FilterType).map((filterType) => {
+    const appFilters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
-        checked: filterType === this._activeFilterType
+        checked: filterType === this._activeFilterType,
+        disabled: getFilteredEvents(this._eventsModel.getEventsAll(), filterType).length === 0 ? true : false
       };
     });
 
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new FilterComponent(filters);
+    this._filterComponent = new FilterComponent(appFilters);
     this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {

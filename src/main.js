@@ -1,12 +1,14 @@
-import {AUTHORIZATION, END_POINT, StoreKey, StoreInfo} from './data';
-import {render, remove} from './utils/render';
-import API from './api/api.js';
+import {AUTHORIZATION, END_POINT, StoreInfo, StoreKey} from './data.js';
+import {render, remove} from './utils/render.js';
+import API from './api/index.js';
 import AppStore from './api/app-store.js';
 import BackupStore from './api/backup-store.js';
 import Provider from './api/provider.js';
-import APP from './controllers/app-controller';
-import EventsModel from './models/points-model';
-import LoadingComponent from './components/loading-component';
+import AppController from './controllers/app-controller.js';
+import EventsModel from './models/events-model.js';
+import LoadingComponent from './components/loading-component.js';
+import ErrorComponent from './components/error-component.js';
+import 'flatpickr/dist/flatpickr.css';
 
 const tripInfoElement = document.querySelector(`.trip-info`);
 
@@ -16,7 +18,7 @@ const apiWithProvider = new Provider(api, backupStore);
 
 const eventsModel = new EventsModel();
 const appStore = new AppStore();
-const appController = new APP(tripInfoElement, eventsModel, apiWithProvider, appStore);
+const appController = new AppController(tripInfoElement, eventsModel, apiWithProvider, appStore);
 
 const loadingComponent = new LoadingComponent();
 const eventAddBtn = document.querySelector(`.trip-main__event-add-btn`);
@@ -37,4 +39,21 @@ apiWithProvider.getData({url: StoreKey.OFFERS})
     eventsModel.setEvents(events);
     remove(loadingComponent);
     eventAddBtn.disabled = false;
+  })
+  .catch((error) => {
+    remove(loadingComponent);
+    render(document.querySelector(`.trip-events`), new ErrorComponent(error));
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

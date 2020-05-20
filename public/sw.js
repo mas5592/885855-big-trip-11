@@ -3,14 +3,17 @@ const CACHE_VER = `v1`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
 self.addEventListener(`install`, (evt) => {
-  console.log(`install`)
-  evt.waitUntil(caches.open(CACHE_NAME)
+  evt.waitUntil(
+    caches.open(CACHE_NAME)
     .then((cache) => {
       return cache.addAll([
         `/`,
         `/index.html`,
         `/bundle.js`,
         `/css/style.css`,
+        `/img/logo.png`,
+        `/img/header-bg.png`,
+        `/img/header-bg@2x.png`,
         `/img/icons/bus.png`,
         `/img/icons/check-in.png`,
         `/img/icons/drive.png`,
@@ -19,18 +22,13 @@ self.addEventListener(`install`, (evt) => {
         `/img/icons/ship.png`,
         `/img/icons/sightseeing.png`,
         `/img/icons/taxi.png`,
-        `/img/icons/train.png`,
-        `/img/icons/transport.png`,
-        `/img/header-bg.png`,
-        `/img/header-bg@2x.png`,
-        `/img/logo.png`
+        `/img/icons/transport.png`
       ]);
     })
   );
 });
 
 self.addEventListener(`activate`, (evt) => {
-  console.log(`activate`)
   evt.waitUntil(
     caches.keys()
       .then(
@@ -51,31 +49,29 @@ self.addEventListener(`activate`, (evt) => {
   );
 });
 
-const fetchHandler = (evt) => {
-  console.log(`fetch`)
+self.addEventListener(`fetch`, (evt) => {
   const {request} = evt;
 
   evt.respondWith(
-    caches.match(request)
+      caches.match(request)
       .then((cacheResponse) => {
         if (cacheResponse) {
           return cacheResponse;
         }
 
-        return fetch(request).then(
-          (response) => {
+        return fetch(request)
+          .then((response) => {
             if (!response || response.status !== 200 || response.type !== `basic`) {
               return response;
             }
 
             const clonedResponse = response.clone();
 
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clonedResponse));
+            caches.open(CACHE_NAME)
+              .then((cache) => cache.put(request, clonedResponse));
+
             return response;
-          }
-        );
+          });
       })
   );
-};
-
-self.addEventListener(`fetch`, fetchHandler);
+});
