@@ -1,14 +1,14 @@
-import {render, RenderPosition} from '../utils/render.js';
-import {MenuItem} from '../data.js';
-import {getStatistics} from '../utils/common.js';
-import MenuComponent from '../components/menu-component.js';
-import StatistiscComponent from '../components/statistics-component.js';
 import DayListContainerComponent from '../components/day-list-container.js';
 import FilterController from '../controllers/filter-controller.js';
-import TripInfoComponent from '../components/info-component.js';
+import InfoComponent from '../components/info-component.js';
+import MenuComponent from '../components/menu-component.js';
+import StatistiscComponent from '../components/statistics-component.js';
 import TripController from '../controllers/trip-controller.js';
+import {getStatistics} from '../utils/common';
+import {render, RenderPosition} from '../utils/render.js';
+import {MenuItem} from '../data.js';
 
-export default class APP {
+export default class AppController {
   constructor(container, eventsModel, api, store) {
     this._container = container;
     this._eventsModel = eventsModel;
@@ -17,7 +17,7 @@ export default class APP {
 
     this._activeMenuItem = MenuItem.TABLE;
 
-    this._tripInfoComponent = new TripInfoComponent();
+    this._infoComponent = new InfoComponent();
     this._statisticsComponent = new StatistiscComponent();
 
     this._tripController = null;
@@ -42,7 +42,7 @@ export default class APP {
     });
 
     const menu = new MenuComponent(menuItems);
-    menu.setOnMenuChange(this._onMenuChange);
+    menu.setMenuChangeHandler(this._onMenuChange);
     render(tripControlElement, menu);
 
     const filterController = new FilterController(tripControlElement, this._eventsModel);
@@ -93,7 +93,7 @@ export default class APP {
   }
 
   _updateTotalInfo() {
-    this._tripInfoComponent.setEvents(this._eventsModel.getEventsAll());
+    this._infoComponent.setEvents(this._eventsModel.getEventsAll());
 
     const tripTotalPrice = document.querySelector(`.trip-info__cost-value`);
     tripTotalPrice.textContent = this._eventsModel.getEventsAll().reduce((totalPrice, it) => {
@@ -102,6 +102,6 @@ export default class APP {
       }, 0);
     }, 0);
 
-    render(this._container, this._tripInfoComponent, RenderPosition.AFTERBEGIN);
+    render(this._container, this._infoComponent, RenderPosition.AFTERBEGIN);
   }
 }

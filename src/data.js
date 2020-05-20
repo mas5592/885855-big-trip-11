@@ -4,13 +4,15 @@ export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 export const HIDDEN_CLASS = `visually-hidden`;
 
-export const SHAKE_ANIMATION_TIMEOUT = 600;
-
-export const SERVER_TIMEOUT = 10000;
+export const Timeout = {
+  SERVER: 15000,
+  DEBOUNCE: 500,
+  SHAKE_ANIMATION: 600
+};
 
 export const ESC_KEYCODE = 27;
 
-export const TypeRoutePoint = {
+export const TypeRoute = {
   TRANSFER: [
     `Bus`,
     `Drive`,
@@ -28,9 +30,9 @@ export const TypeRoutePoint = {
 };
 
 export const FilterType = {
-  EVERYTHING: `Everything`,
-  FUTURE: `Future`,
-  PAST: `Past`
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`
 };
 
 export const Method = {
@@ -40,27 +42,17 @@ export const Method = {
   PUT: `PUT`
 };
 
-export const ButtonsTextDefault = {
+export const DefaultBtnText = {
   DELETE: `Delete`,
   SAVE: `Save`
 };
 
-export const ConnectingButtonsText = {
+export const ConnectBtnText = {
   DELETE: `Deleting...`,
   SAVE: `Saving...`
 };
 
-export const TYPE_POINTS_TRANSPORT = [
-  `Bus`,
-  `Drive`,
-  `Flight`,
-  `Ship`,
-  `Taxi`,
-  `Train`,
-  `Transport`,
-];
-
-export const SORT_TYPE = {
+export const SortType = {
   EVENT: `event`,
   TIME: `time`,
   PRICE: `price`
@@ -69,12 +61,6 @@ export const SORT_TYPE = {
 export const MenuItem = {
   STATS: `stats`,
   TABLE: `table`
-};
-
-export const Mode = {
-  ADD: `add`,
-  DEFAULT: `default`,
-  EDIT: `edit`
 };
 
 export const StoreInfo = {
@@ -87,7 +73,13 @@ export const StoreInfo = {
 };
 
 export const StoreKey = {
-  DESTINATIONS: `destinations`,
   POINTS: `points`,
   OFFERS: `offers`,
+  DESTINATIONS: `destinations`
+};
+
+export const StatisticsGraph = {
+  MONEY: `money`,
+  TRANSPORT: `transport`,
+  TIME_SPENT: `time spent`
 };

@@ -1,11 +1,11 @@
+import {SortType, HIDDEN_CLASS} from '../data.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import NoEventsComponent from '../components/no-events-component.js';
 import SortComponent from '../components/sort-component.js';
-import TripDayItemComponent from '../components/days-component.js';
-import {formatDateTime, formatDateWithoutTime} from '../utils/time.js';
-import {EmptyEvent} from '../utils/common.js';
-import {SORT_TYPE, HIDDEN_CLASS, Mode as EventControllerMode} from '../data.js';
+import DayComponent from '../components/days-component.js';
 import EventController from './event-controller.js';
+import {Mode as EventControllerMode, EmptyEvent} from '../utils/common.js';
+import {formatDateTime, formatDateWithoutTime} from '../utils/time.js';
 
 const renderEvents = (events, container, onDataChange, onViewChange, store, isSortedByDefault = true) => {
   const eventControllers = [];
@@ -15,7 +15,7 @@ const renderEvents = (events, container, onDataChange, onViewChange, store, isSo
     : [true];
 
   dates.forEach((date, dateIndex) => {
-    const day = isSortedByDefault ? new TripDayItemComponent(formatDateWithoutTime(date), dateIndex + 1) : new TripDayItemComponent();
+    const day = isSortedByDefault ? new DayComponent(formatDateWithoutTime(date), dateIndex + 1) : new DayComponent();
 
     events
       .filter((event) => {
@@ -49,7 +49,7 @@ export default class TripController {
     this._eventControllers = [];
     this._creatingEvent = null;
 
-    this._activeSortType = SORT_TYPE.EVENT;
+    this._activeSortType = SortType.EVENT;
     this._isSortedByDefault = true;
 
     this._noEventsComponent = new NoEventsComponent();
@@ -75,7 +75,7 @@ export default class TripController {
     }
 
     if (!this._sortComponent) {
-      const sortFilters = Object.values(SORT_TYPE)
+      const sortFilters = Object.values(SortType)
         .map((sortType) => {
           return {
             name: sortType,
@@ -84,7 +84,7 @@ export default class TripController {
         });
       this._sortComponent = new SortComponent(sortFilters);
       render(this._container.parentElement, this._sortComponent, RenderPosition.AFTERBEGIN);
-      this._sortComponent.setOnSortChange(this._onSortTypeChange);
+      this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     }
 
     this._onSortTypeChange(this._activeSortType);
@@ -120,6 +120,12 @@ export default class TripController {
   updateEvents() {
     this._removeEvents();
     this.render();
+  }
+
+  _removeEvents() {
+    this._container.innerHTML = ``;
+    this._eventControllers.forEach((_eventcontroller) => _eventcontroller.destroy());
+    this._eventcontrollers = [];
   }
 
   _onDataChange(eventController, oldData, newData) {
@@ -170,15 +176,15 @@ export default class TripController {
     const events = this._eventsModel.getEvents();
 
     switch (sortType) {
-      case SORT_TYPE.EVENT:
+      case SortType.EVENT:
         this._isSortedByDefault = true;
         sortedEvents = events.slice();
         break;
-      case SORT_TYPE.TIME:
+      case SortType.TIME:
         this._isSortedByDefault = false;
         sortedEvents = events.slice().sort((a, b) => (b.endDate - b.startDate) - (a.endDate - a.startDate));
         break;
-      case SORT_TYPE.PRICE:
+      case SortType.PRICE:
         this._isSortedByDefault = false;
         sortedEvents = events.slice().sort((a, b) => b.price - a.price);
         break;
@@ -186,11 +192,5 @@ export default class TripController {
 
     this._container.innerHTML = ``;
     this._eventControllers = renderEvents(sortedEvents, this._container, this._onDataChange, this.onViewChange, this._store, this._isSortedByDefault);
-  }
-
-  _removeEvents() {
-    this._container.innerHTML = ``;
-    this._eventControllers.forEach((_eventcontroller) => _eventcontroller.destroy());
-    this._eventcontrollers = [];
   }
 }

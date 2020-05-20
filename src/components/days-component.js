@@ -1,9 +1,8 @@
 import AbstractComponent from './abstract-component.js';
-import {formatInfoDateTime} from '../utils/time.js';
+import {formatDateTimeAttr, formatInfoDateTime} from '../utils/time.js';
 
-export default class TripDayItem extends AbstractComponent {
+export default class Day extends AbstractComponent {
   constructor(day, dayCount) {
-
     super();
     this._day = day;
     this._dayCount = dayCount;
@@ -17,11 +16,9 @@ export default class TripDayItem extends AbstractComponent {
       `<li class="trip-days__item  day">
         <div class="day__info">
           <span class="day__counter">${count}</span>
-          <time class="day__date" datetime="2019-03-18">${date}</time>
+          <time class="day__date" datetime="${formatDateTimeAttr(this._day)}">${date}</time>
         </div>
-        <ul class="trip-events__list">
-
-        </ul>
+        <ul class="trip-events__list"> </ul>
       </li>`
     );
   }
