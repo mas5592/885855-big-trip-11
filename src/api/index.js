@@ -1,5 +1,5 @@
 import {Method, Timeout} from '../data.js';
-import EventModel from '../models/event-model.js';
+import Event from '../models/event-model.js';
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -23,7 +23,7 @@ export default class API {
   getEvents() {
     return this._load({url: `points`})
     .then((response) => response.json())
-    .then(EventModel.parseEvents);
+    .then(Event.parseEvents);
   }
 
   createEvent(event) {
@@ -34,7 +34,7 @@ export default class API {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
-      .then(EventModel.parseEvent);
+      .then(Event.parseEvent);
 
   }
 
@@ -46,7 +46,7 @@ export default class API {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
-      .then(EventModel.parseEvent);
+      .then(Event.parseEvent);
   }
 
   deleteEvent(id) {

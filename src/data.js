@@ -12,21 +12,26 @@ export const Timeout = {
 
 export const ESC_KEYCODE = 27;
 
-export const TypeRoute = {
-  TRANSFER: [
-    `Bus`,
-    `Drive`,
-    `Flight`,
-    `Ship`,
-    `Taxi`,
-    `Train`,
-    `Transport`
-  ],
-  ACTIVITY: [
-    `Check-in`,
-    `Restaurant`,
-    `Sightseeing`
-  ]
+export const TRAVEL_TRANSPORT = [
+  `bus`,
+  `drive`,
+  `flight`,
+  `ship`,
+  `taxi`,
+  `train`,
+  `transport`
+];
+
+export const TRAVEL_ACTIVITY = [
+  `check-in`,
+  `sightseeing`,
+  `restaurant`
+];
+
+
+export const Placeholder = {
+  TRANSPORT: `to`,
+  ACTION: `in`,
 };
 
 export const FilterType = {
@@ -83,3 +88,5 @@ export const StatisticsGraph = {
   TRANSPORT: `transport`,
   TIME_SPENT: `time spent`
 };
+
+export const FILTER_DIGITS_RANGE = /^\d*\.?\d*$/;

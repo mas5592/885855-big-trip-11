@@ -4,9 +4,9 @@ import InfoComponent from '../components/info-component.js';
 import MenuComponent from '../components/menu-component.js';
 import StatistiscComponent from '../components/statistics-component.js';
 import TripController from '../controllers/trip-controller.js';
-import {getStatistics} from '../utils/common';
+import {getStatistics} from '../utils/common.js';
 import {render, RenderPosition} from '../utils/render.js';
-import {MenuItem} from '../data.js';
+import {MenuItem, HIDDEN_CLASS} from '../data.js';
 
 export default class AppController {
   constructor(container, eventsModel, api, store) {
@@ -37,7 +37,7 @@ export default class AppController {
     const menuItems = Object.values(MenuItem).map((item) => {
       return {
         name: item,
-        active: item === this._activeMenuItem
+        active: item === this._activeMenuItem,
       };
     });
 
@@ -75,10 +75,12 @@ export default class AppController {
     this._activeMenuItem = activeMenuItem;
     switch (this._activeMenuItem) {
       case MenuItem.TABLE:
+        document.querySelector(`.trip-filters__filter`).classList.remove(HIDDEN_CLASS);
         this._statisticsComponent.hide();
         this._tripController.show();
         break;
       case MenuItem.STATS:
+        document.querySelector(`.trip-filters__filter`).classList.add(HIDDEN_CLASS);
         this._statisticsComponent.show();
         this._tripController.hide();
         this._tripController.onViewChange();

@@ -1,4 +1,4 @@
-import {TypeRoute} from '../data.js';
+import {TRAVEL_TRANSPORT} from '../data.js';
 import {formatStatisticsTime} from './time';
 
 export const convertEvent = (event, offersAll) => {
@@ -9,6 +9,10 @@ export const convertEvent = (event, offersAll) => {
       checked: event.offers.some((el) => offer.title === el.title)
     };
   })});
+};
+
+export const getChecked = (switchData) => {
+  return (switchData) ? `checked` : ``;
 };
 
 export const getStatistics = (events, allTypes) => {
@@ -22,7 +26,7 @@ export const getStatistics = (events, allTypes) => {
       totalPrice: filteredEvents.reduce((totalPrice, it) => totalPrice + it.price, 0),
       count: filteredEvents.length,
       totalTime: filteredEvents.reduce((totalTime, it) => totalTime + formatStatisticsTime(it.startDate, it.endDate), 0),
-      transport: TypeRoute.TRANSFER.some((it) => key === it)
+      transport: TRAVEL_TRANSPORT.some((it) => key === it)
     });
   }
   return arr;
@@ -30,24 +34,6 @@ export const getStatistics = (events, allTypes) => {
 
 export const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-export const formatTypeRoute = (typeRoute) => {
-  let formattedTypeRoute = ``;
-  Object.keys(TypeRoute).forEach((el) => {
-    TypeRoute[el].forEach((it) => {
-      if (typeRoute === it && el === `TRANSFER`) {
-        formattedTypeRoute = `${capitalizeFirstLetter(typeRoute)} to`;
-      } else if (typeRoute === `restaurant`) {
-        formattedTypeRoute = `${capitalizeFirstLetter(typeRoute)} in`;
-      } else if (typeRoute === `check-in`) {
-        formattedTypeRoute = `${capitalizeFirstLetter(typeRoute).slice(0, 5)} into`;
-      } else if (typeRoute === `sightseeing`) {
-        formattedTypeRoute = `${capitalizeFirstLetter(typeRoute)} at`;
-      }
-    });
-  });
-  return formattedTypeRoute;
 };
 
 export const Mode = {
