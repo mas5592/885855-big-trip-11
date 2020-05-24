@@ -1,5 +1,5 @@
-import {ESC_KEYCODE, ConnectBtnText, Timeout} from '../data.js';
-import EventModel from '../models/event-model';
+import {ESC_KEYCODE, FILTER_DIGITS_RANGE, ConnectBtnText, Timeout} from '../data.js';
+import EventModel from '../models/event-model.js';
 import EventItemComponent from '../components/event-item-component.js';
 import EventEditComponent from '../components/event-component.js';
 import {render, replace, remove} from '../utils/render.js';
@@ -20,8 +20,9 @@ export default class EventController {
     this._eventEditComponent = null;
 
     this._onFormSubmit = this._onFormSubmit.bind(this);
-    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
+    this._createButton = document.querySelector(`.trip-main__event-add-btn`);
   }
 
   render(event, mode) {
@@ -34,6 +35,9 @@ export default class EventController {
     this._eventItemComponent = new EventItemComponent(event, this._mode);
     this._eventEditComponent = new EventEditComponent(event, this._mode, this._store);
 
+    this._eventInputPrice = this._eventEditComponent.getElement().querySelector(`.event__input--price`);
+    this._filterDigitInput(this._eventInputPrice);
+
     this._eventItemComponent.setArrowHandler(() => {
       this._replaceItemToEdit();
       document.addEventListener(`keydown`, this._onEscPress);
@@ -44,13 +48,12 @@ export default class EventController {
     });
 
     this._eventEditComponent.setDeleteBtnClickHandler(() => {
-      this._onDeleteButtonClick(this._mode);
+      this._onDeleteBtnClick(this._mode);
     });
 
     switch (this._mode) {
       case Mode.DEFAULT:
         this._eventEditComponent.setCancelBtnClickHandler(() => this._replaceEditToItem());
-
         this._eventEditComponent.setFavoriteBtnClickHandler(() => {
           const newEvent = EventModel.clone(event);
           newEvent.isFavorite = !newEvent.isFavorite;
@@ -98,11 +101,28 @@ export default class EventController {
     this._eventEditComponent.blockElement(true);
 
     setTimeout(() => {
-      this._eventEditComponent.setDefaultButtonsText();
+      this._eventEditComponent.setDefaultBtnText();
     }, Timeout.SHAKE_ANIMATION);
   }
 
-  _onDeleteButtonClick(mode) {
+  _filterDigitInput(textBlock) {
+    [`input`, `keydown`, `keyup`, `mousedown`, `mouseup`, `select`, `contextmenu`, `drop`].forEach((event) => {
+      textBlock.addEventListener(event, () => {
+        if (FILTER_DIGITS_RANGE.test(textBlock.value)) {
+          textBlock.oldValue = textBlock.value;
+          textBlock.oldSelectionStart = textBlock.selectionStart;
+          textBlock.oldSelectionEnd = textBlock.selectionEnd;
+        } else if (!textBlock[`oldValue`]) {
+          textBlock.value = ``;
+        } else {
+          textBlock.value = textBlock.oldValue;
+          textBlock.setSelectionRange(textBlock.oldSelectionStart, textBlock.oldSelectionEnd);
+        }
+      });
+    });
+  }
+
+  _onDeleteBtnClick(mode) {
     if (mode === Mode.ADD) {
       this._onDataChange(this, EmptyEvent, null);
     } else {
