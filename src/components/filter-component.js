@@ -25,7 +25,6 @@ export default class Filter extends AbstractComponent {
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
       handler(evt.target.dataset.filter);
-      document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     });
   }
 }

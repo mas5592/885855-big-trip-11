@@ -1,4 +1,4 @@
-import Event from '../models/event-model';
+import Event from '../models/event-model.js';
 import {nanoid} from 'nanoid';
 
 const getSyncedEvents = (items) =>

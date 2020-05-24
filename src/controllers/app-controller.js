@@ -4,7 +4,7 @@ import InfoComponent from '../components/info-component.js';
 import MenuComponent from '../components/menu-component.js';
 import StatistiscComponent from '../components/statistics-component.js';
 import TripController from '../controllers/trip-controller.js';
-import {getStatistics} from '../utils/common';
+import {getStatistics} from '../utils/common.js';
 import {render, RenderPosition} from '../utils/render.js';
 import {MenuItem, HIDDEN_CLASS} from '../data.js';
 
@@ -55,16 +55,15 @@ export default class AppController {
     const daysListElement = tripEventsElement.querySelector(`.trip-days`);
     this._tripController = new TripController(daysListElement, this._eventsModel, this._api, this._store);
 
-    const createNewEventBtn = document.querySelector(`.trip-main__event-add-btn`);
-    createNewEventBtn.addEventListener(`click`, () => {
-      createNewEventBtn.disabled = true;
-      document.getElementById('filter-everything').checked = 'checked';
+    const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+    createNewEventButton.addEventListener(`click`, () => {
       this._activeMenuItem = MenuItem.TABLE;
       menu.setDefault();
       this._statisticsComponent.hide();
       this._tripController.show();
       this._tripController.createNewEvent();
     });
+
     this._statisticsComponent.hide();
     filterController.render();
   }

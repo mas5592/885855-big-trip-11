@@ -1,11 +1,9 @@
-import {ESC_KEYCODE, ConnectBtnText, Timeout} from '../data.js';
-import EventModel from '../models/event-model';
+import {ESC_KEYCODE, FILTER_DIGITS_RANGE, ConnectBtnText, Timeout} from '../data.js';
+import EventModel from '../models/event-model.js';
 import EventItemComponent from '../components/event-item-component.js';
 import EventEditComponent from '../components/event-component.js';
 import {render, replace, remove} from '../utils/render.js';
 import {Mode, EmptyEvent} from '../utils/common.js';
-
-const FILTER_DIGITS_RANGE = /^\d*\.?\d*$/;
 
 export default class EventController {
   constructor(container, onDataChange, onViewChange, store) {
@@ -24,6 +22,7 @@ export default class EventController {
     this._onFormSubmit = this._onFormSubmit.bind(this);
     this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
+    this._createButton = document.querySelector(`.trip-main__event-add-btn`);
   }
 
   render(event, mode) {
@@ -50,7 +49,6 @@ export default class EventController {
 
     this._eventEditComponent.setDeleteBtnClickHandler(() => {
       this._onDeleteBtnClick(this._mode);
-      document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     });
 
     switch (this._mode) {
@@ -142,7 +140,6 @@ export default class EventController {
 
   _replaceEditToItem() {
     document.removeEventListener(`keydown`, this._onEscPress);
-    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     this._eventEditComponent.reset();
     if (this._mode === Mode.ADD) {
       this._onDataChange(this, EmptyEvent, null);
@@ -156,7 +153,6 @@ export default class EventController {
   _onFormSubmit(evt, mode) {
     evt.preventDefault();
     this._eventEditComponent.setBtnText(`save`, ConnectBtnText.SAVE);
-    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     const newData = this._eventEditComponent.getData();
     if (mode === Mode.ADD) {
       this._onDataChange(this, EmptyEvent, newData);

@@ -13,13 +13,13 @@ export const Timeout = {
 export const ESC_KEYCODE = 27;
 
 export const TRAVEL_TRANSPORT = [
-  `taxi`,
   `bus`,
-  `train`,
-  `ship`,
-  `transport`,
   `drive`,
-  `flight`
+  `flight`,
+  `ship`,
+  `taxi`,
+  `train`,
+  `transport`
 ];
 
 export const TRAVEL_ACTIVITY = [
@@ -88,3 +88,5 @@ export const StatisticsGraph = {
   TRANSPORT: `transport`,
   TIME_SPENT: `time spent`
 };
+
+export const FILTER_DIGITS_RANGE = /^\d*\.?\d*$/;
