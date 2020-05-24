@@ -12,11 +12,13 @@ export const formatStatisticsTime = (time1, time2) => moment(time2).diff(moment(
 
 export const formatDateWithoutTime = (dateString) => moment(dateString, `YYYY MMM DD`).valueOf();
 
-export const formatDurationTime = (timeDiff) => {
-  const duration = moment.duration(timeDiff);
-  const days = duration.days();
-  const hours = duration.hours();
-  const minutes = duration.minutes();
+export const formatDurationTime = (time1, time2) => {
+  const daysInt = moment(time2).diff(moment(time1), `days`);
+  const hoursInt = moment(time2).diff(moment(time1), `hours`) - daysInt * 24;
+  const minutesInt = moment(time2).diff(moment(time1), `minutes`) - daysInt * 60 * 24 - hoursInt * 60;
 
-  return `${days > 0 ? days + `D` : ``} ${hours > 0 ? hours + `H` : ``} ${minutes > 0 ? minutes + `M` : ``}`;
+  const formattedInt = `${daysInt > 0 ? castInterval(daysInt, `D`) : ``} ${hoursInt > 0 ? castInterval(hoursInt, `H`) : ``} ${castInterval(minutesInt, `M`)}`;
+  return formattedInt;
 };
+
+const castInterval = (timeValue, unitOfTime) => timeValue < 10 ? `0${timeValue}${unitOfTime}` : `${timeValue}${unitOfTime}`;

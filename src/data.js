@@ -12,21 +12,26 @@ export const Timeout = {
 
 export const ESC_KEYCODE = 27;
 
-export const TypeRoute = {
-  TRANSFER: [
-    `Bus`,
-    `Drive`,
-    `Flight`,
-    `Ship`,
-    `Taxi`,
-    `Train`,
-    `Transport`
-  ],
-  ACTIVITY: [
-    `Check-in`,
-    `Restaurant`,
-    `Sightseeing`
-  ]
+export const TRAVEL_TRANSPORT = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`
+];
+
+export const TRAVEL_ACTIVITY = [
+  `check-in`,
+  `sightseeing`,
+  `restaurant`
+];
+
+
+export const Placeholder = {
+  TRANSPORT: `to`,
+  ACTION: `in`,
 };
 
 export const FilterType = {

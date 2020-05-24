@@ -5,6 +5,8 @@ import EventEditComponent from '../components/event-component.js';
 import {render, replace, remove} from '../utils/render.js';
 import {Mode, EmptyEvent} from '../utils/common.js';
 
+const FILTER_DIGITS_RANGE = /^\d*\.?\d*$/;
+
 export default class EventController {
   constructor(container, onDataChange, onViewChange, store) {
     this._container = container;
@@ -20,7 +22,7 @@ export default class EventController {
     this._eventEditComponent = null;
 
     this._onFormSubmit = this._onFormSubmit.bind(this);
-    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
+    this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
   }
 
@@ -34,6 +36,9 @@ export default class EventController {
     this._eventItemComponent = new EventItemComponent(event, this._mode);
     this._eventEditComponent = new EventEditComponent(event, this._mode, this._store);
 
+    this._eventInputPrice = this._eventEditComponent.getElement().querySelector(`.event__input--price`);
+    this._filterDigitInput(this._eventInputPrice);
+
     this._eventItemComponent.setArrowHandler(() => {
       this._replaceItemToEdit();
       document.addEventListener(`keydown`, this._onEscPress);
@@ -44,18 +49,20 @@ export default class EventController {
     });
 
     this._eventEditComponent.setDeleteBtnClickHandler(() => {
-      this._onDeleteButtonClick(this._mode);
+      this._onDeleteBtnClick(this._mode);
+    });
+
+    this._eventEditComponent.setFavoriteBtnClickHandler(() => {
+      const newEvent = EventModel.clone(event);
+      newEvent.isFavorite = !newEvent.isFavorite;
+      this._onDataChange(this, event, newEvent);
+
+      this._mode = Mode.EDIT;
     });
 
     switch (this._mode) {
       case Mode.DEFAULT:
         this._eventEditComponent.setCancelBtnClickHandler(() => this._replaceEditToItem());
-
-        this._eventEditComponent.setFavoriteBtnClickHandler(() => {
-          const newEvent = EventModel.clone(event);
-          newEvent.isFavorite = !newEvent.isFavorite;
-          this._onDataChange(this, event, newEvent);
-        });
 
         if (oldEventItemComponent && oldEventEditComponent) {
           replace(this._eventItemComponent, oldEventItemComponent);
@@ -98,11 +105,28 @@ export default class EventController {
     this._eventEditComponent.blockElement(true);
 
     setTimeout(() => {
-      this._eventEditComponent.setDefaultButtonsText();
+      this._eventEditComponent.setDefaultBtnText();
     }, Timeout.SHAKE_ANIMATION);
   }
 
-  _onDeleteButtonClick(mode) {
+  _filterDigitInput(textBlock) {
+    [`input`, `keydown`, `keyup`, `mousedown`, `mouseup`, `select`, `contextmenu`, `drop`].forEach((event) => {
+      textBlock.addEventListener(event, () => {
+        if (FILTER_DIGITS_RANGE.test(textBlock.value)) {
+          textBlock.oldValue = textBlock.value;
+          textBlock.oldSelectionStart = textBlock.selectionStart;
+          textBlock.oldSelectionEnd = textBlock.selectionEnd;
+        } else if (!textBlock[`oldValue`]) {
+          textBlock.value = ``;
+        } else {
+          textBlock.value = textBlock.oldValue;
+          textBlock.setSelectionRange(textBlock.oldSelectionStart, textBlock.oldSelectionEnd);
+        }
+      });
+    });
+  }
+
+  _onDeleteBtnClick(mode) {
     if (mode === Mode.ADD) {
       this._onDataChange(this, EmptyEvent, null);
     } else {
@@ -120,6 +144,7 @@ export default class EventController {
 
   _replaceEditToItem() {
     document.removeEventListener(`keydown`, this._onEscPress);
+    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     this._eventEditComponent.reset();
     if (this._mode === Mode.ADD) {
       this._onDataChange(this, EmptyEvent, null);

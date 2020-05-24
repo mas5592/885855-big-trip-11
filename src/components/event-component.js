@@ -1,10 +1,21 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
-import {capitalizeFirstLetter, convertEvent, formatTypeRoute, Mode} from '../utils/common.js';
-import {DefaultBtnText, Timeout, TypeRoute} from '../data.js';
+import {capitalizeFirstLetter, convertEvent, getChecked, Mode} from '../utils/common.js';
+import {DefaultBtnText, Timeout, TRAVEL_TRANSPORT, TRAVEL_ACTIVITY, Placeholder} from '../data.js';
 import EventModel from '../models/event-model.js';
 import debounce from 'lodash/debounce';
+import DOMPurify from 'dompurify';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
+
+const createTypeRoutesMarkup = (choosers, type) => {
+  return choosers.map((el) => {
+    return (
+      `<div class="event__type-item">
+          <input id="event-type-${el}-1" class="event__type-input visually-hidden" type="radio" name="event-type" value="${el}" ${getChecked(el === type)}>
+          <label class="event__type-label event__type-label--${el}" for="event-type-${el}-1">${capitalizeFirstLetter(el)}</label>
+        </div>`);
+  }).join(`\n`);
+};
 
 export default class EventEdit extends AbstractSmartComponent {
   constructor(event, mode, store) {
@@ -48,23 +59,24 @@ export default class EventEdit extends AbstractSmartComponent {
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" ${type ? `src="img/icons/${type}.png` : ``} " alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-            <div class="event__type-list">${Object.keys(TypeRoute).map((group) => {
-        return (
-          `<fieldset class="event__type-group">
-            <legend class="visually-hidden">${TypeRoute[group]}</legend>${TypeRoute[group].map((el) => {
-            return (
-              `<div class="event__type-item">
-                <input id="event-type-${el}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${el}" ${type === el && `checked`}>
-                <label class="event__type-label  event__type-label--${el}" for="event-type-${el}-1">${capitalizeFirstLetter(el)}</label>
-              </div>`);
-          }).join(`\n`)}
-          </fieldset>`);
-      }).join(`\n`)}
-            </div>
+            <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox" name="event-type" value="${type}">
+
+            <div class="event__type-list">
+            <fieldset class="event__type-group">
+              <legend class="visually-hidden">Transfer</legend>
+              ${createTypeRoutesMarkup(TRAVEL_TRANSPORT, type)}
+            </fieldset>
+            <fieldset class="event__type-group">
+              <legend class="visually-hidden">Activity</legend>
+              ${createTypeRoutesMarkup(TRAVEL_ACTIVITY, type)}
+            </fieldset>
+          </div>
+
           </div>
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">${formatTypeRoute(type)}</label>
+            <label class="event__label  event__type-output" for="event-destination-1">
+            ${capitalizeFirstLetter(type)} ${TRAVEL_TRANSPORT.includes(type) ? Placeholder.TRANSPORT : Placeholder.ACTION}
+            </label>
             <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
             <datalist id="destination-list-1">${this._destinationList.map((it) => {
         return `<option value="${it}"></option>`;
@@ -83,7 +95,7 @@ export default class EventEdit extends AbstractSmartComponent {
               <span class="visually-hidden">price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${DOMPurify.sanitize(price)}">
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">${this._btnSave}</button>
           <button class="event__reset-btn" type="reset">${this._mode === Mode.ADD ? `Cancel` : `${this._btnDelete}`}</button>
@@ -107,11 +119,11 @@ export default class EventEdit extends AbstractSmartComponent {
           <div class="event__available-offers">${this._activeEvent.offers.map(({price: offerPrice, title, checked}) => {
         return (
           `<div class="event__offer-selector">
-              <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}" ${checked ? `checked` : ``}>
-              <label class="event__offer-label" for="event-offer-${title}-1">
-                <span class="event__offer-title">${title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offerPrice}</span>
-              </label>
-            </div>`);
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-1" type="checkbox" name="event-offer-${title}" ${checked ? `checked` : ``}>
+            <label class="event__offer-label" for="event-offer-${title}-1">
+              <span class="event__offer-title">${title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offerPrice}</span>
+            </label>
+          </div>`);
       }).join(`\n`)}
           </div>
         </section>`}
@@ -150,12 +162,15 @@ export default class EventEdit extends AbstractSmartComponent {
     };
 
     return new EventModel({
-      'base_price': parseInt(formData.get(`event-price`), 10),
       'date_from': moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
       'date_to': moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
       'destination': destination,
+      /*
+      'id': this.event.id,
+      */
       'offers': offersChecked,
       'type': formData.get(`event-type`),
+      'base_price': parseInt(formData.get(`event-price`), 10),
       'is_favorite': form.querySelector(`.event__favorite-checkbox`) ? form.querySelector(`.event__favorite-checkbox`).checked : false
     });
   }
