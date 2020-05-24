@@ -165,9 +165,6 @@ export default class EventEdit extends AbstractSmartComponent {
       'date_from': moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
       'date_to': moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
       'destination': destination,
-      /*
-      'id': this.event.id,
-      */
       'offers': offersChecked,
       'type': formData.get(`event-type`),
       'base_price': parseInt(formData.get(`event-price`), 10),
@@ -362,7 +359,6 @@ export default class EventEdit extends AbstractSmartComponent {
   setDeleteBtnClickHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, handler);
-
     this._deleteHandler = handler;
   }
 

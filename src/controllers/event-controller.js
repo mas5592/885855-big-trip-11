@@ -50,19 +50,17 @@ export default class EventController {
 
     this._eventEditComponent.setDeleteBtnClickHandler(() => {
       this._onDeleteBtnClick(this._mode);
-    });
-
-    this._eventEditComponent.setFavoriteBtnClickHandler(() => {
-      const newEvent = EventModel.clone(event);
-      newEvent.isFavorite = !newEvent.isFavorite;
-      this._onDataChange(this, event, newEvent);
-
-      this._mode = Mode.EDIT;
+      document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     });
 
     switch (this._mode) {
       case Mode.DEFAULT:
         this._eventEditComponent.setCancelBtnClickHandler(() => this._replaceEditToItem());
+        this._eventEditComponent.setFavoriteBtnClickHandler(() => {
+          const newEvent = EventModel.clone(event);
+          newEvent.isFavorite = !newEvent.isFavorite;
+          this._onDataChange(this, event, newEvent);
+        });
 
         if (oldEventItemComponent && oldEventEditComponent) {
           replace(this._eventItemComponent, oldEventItemComponent);
@@ -158,6 +156,7 @@ export default class EventController {
   _onFormSubmit(evt, mode) {
     evt.preventDefault();
     this._eventEditComponent.setBtnText(`save`, ConnectBtnText.SAVE);
+    document.querySelector(`.trip-main__event-add-btn`).disabled = false;
     const newData = this._eventEditComponent.getData();
     if (mode === Mode.ADD) {
       this._onDataChange(this, EmptyEvent, newData);

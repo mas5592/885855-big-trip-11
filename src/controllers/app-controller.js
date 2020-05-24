@@ -6,7 +6,7 @@ import StatistiscComponent from '../components/statistics-component.js';
 import TripController from '../controllers/trip-controller.js';
 import {getStatistics} from '../utils/common';
 import {render, RenderPosition} from '../utils/render.js';
-import {MenuItem} from '../data.js';
+import {MenuItem, HIDDEN_CLASS} from '../data.js';
 
 export default class AppController {
   constructor(container, eventsModel, api, store) {
@@ -58,13 +58,13 @@ export default class AppController {
     const createNewEventBtn = document.querySelector(`.trip-main__event-add-btn`);
     createNewEventBtn.addEventListener(`click`, () => {
       createNewEventBtn.disabled = true;
+      document.getElementById('filter-everything').checked = 'checked';
       this._activeMenuItem = MenuItem.TABLE;
       menu.setDefault();
       this._statisticsComponent.hide();
       this._tripController.show();
       this._tripController.createNewEvent();
     });
-
     this._statisticsComponent.hide();
     filterController.render();
   }
@@ -76,10 +76,12 @@ export default class AppController {
     this._activeMenuItem = activeMenuItem;
     switch (this._activeMenuItem) {
       case MenuItem.TABLE:
+        document.querySelector(`.trip-filters__filter`).classList.remove(HIDDEN_CLASS);
         this._statisticsComponent.hide();
         this._tripController.show();
         break;
       case MenuItem.STATS:
+        document.querySelector(`.trip-filters__filter`).classList.add(HIDDEN_CLASS);
         this._statisticsComponent.show();
         this._tripController.hide();
         this._tripController.onViewChange();
