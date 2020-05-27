@@ -89,10 +89,6 @@ export default class Provider {
     return Promise.resolve();
   }
 
-  getSynchronize() {
-    return this._isSynchronized;
-  }
-
   sync() {
     if (this._isOnLine()) {
       const storeEvents = Object.values(this._store.getAll());

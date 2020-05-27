@@ -1,7 +1,6 @@
 import FilterComponent from '../components/filter-component.js';
 import {render, replace} from '../utils/render.js';
-import {getFilteredEvents} from '../utils/filter.js';
-import {FilterType} from '../data.js';
+import {FilterType, MenuItem} from '../data.js';
 
 export default class FilterController {
   constructor(container, eventsModel) {
@@ -21,8 +20,7 @@ export default class FilterController {
     const appFilters = Object.values(FilterType).map((filterType) => {
       return {
         name: filterType,
-        checked: filterType === this._activeFilterType,
-        disabled: getFilteredEvents(this._eventsModel.getEventsAll(), filterType).length === 0 ? true : false
+        checked: filterType === this._activeFilterType
       };
     });
 
@@ -35,6 +33,17 @@ export default class FilterController {
     } else {
       render(this._container, this._filterComponent);
     }
+  }
+
+  setDefaultView(menuItem = MenuItem.TABLE) {
+    this._eventsModel.setFilter(FilterType.EVERYTHING);
+    this._activeFilterType = FilterType.EVERYTHING;
+    this.render();
+    return menuItem === MenuItem.STATS ? this._filterComponent.setDisableInputs() : this._filterComponent.removeDisableInputs();
+  }
+
+  disableEmptyFilter(currentFilter) {
+    this._filterComponent.disableEmptyFilter(currentFilter);
   }
 
   _onFilterChange(filterType) {

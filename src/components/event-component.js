@@ -17,7 +17,7 @@ const createTypeRoutesMarkup = (choosers, type) => {
   }).join(`\n`);
 };
 
-export default class EventEdit extends AbstractSmartComponent {
+export default class Event extends AbstractSmartComponent {
   constructor(event, mode, store) {
     super();
     this._event = event;
@@ -173,10 +173,10 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   setBtnText(action, text) {
-    if (action === `save`) {
+    if (action === DefaultBtnText.SAVE) {
       this._btnSave = text;
     }
-    if (action === `delete`) {
+    if (action === DefaultBtnText.DELETE) {
       this._btnDelete = text;
     }
 
@@ -319,7 +319,6 @@ export default class EventEdit extends AbstractSmartComponent {
 
   _applyFlatpickr() {
     this._removeFlatpickrs();
-
     this._flatpickrStart = this._setFlatpickr(this.getElement().querySelector(`#event-start-time-1`), this._currentStartDate);
     this._flatpickrEnd = this._setFlatpickr(this.getElement().querySelector(`#event-end-time-1`), this._currentEndDate, this._currentStartDate);
   }
@@ -333,11 +332,11 @@ export default class EventEdit extends AbstractSmartComponent {
     }
   }
 
-  _setFlatpickr(input, defaultTime, dateMin = `today`) {
+  _setFlatpickr(input, defaultTime) {
     return flatpickr(input, {
       enableTime: true,
       dateFormat: `d/m/y H:i`,
-      minDate: dateMin,
+      minDate: this._activeEvent.startDate,
       defaultDate: defaultTime,
       allowInput: true,
     });

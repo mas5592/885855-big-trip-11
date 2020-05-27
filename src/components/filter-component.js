@@ -10,9 +10,9 @@ export default class Filter extends AbstractComponent {
     return (
       `<form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
-      ${this._filters.map(({name, checked, disabled}) => {
+      ${this._filters.map(({name, checked}) => {
         return (
-          `<input id="filter-${name}" data-filter="${name}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name}" ${checked ? `checked` : ``} ${disabled ? `disabled` : ``}>
+          `<input id="filter-${name}" data-filter="${name}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${name}" ${checked ? `checked` : ``}>
           <label class="trip-filters__filter-label" for="filter-${name}">${name}</label>`
         );
       }).join(`\n`)}
@@ -26,5 +26,19 @@ export default class Filter extends AbstractComponent {
     this.getElement().addEventListener(`change`, (evt) => {
       handler(evt.target.dataset.filter);
     });
+  }
+
+  disableEmptyFilter(currentFilter) {
+    this.getElement().querySelector(`#filter-${currentFilter}`).setAttribute(`disabled`, `true`);
+  }
+
+  setDisableInputs() {
+    this.getElement().querySelectorAll(`.trip-filters__filter-input`)
+      .forEach((input) => input.setAttribute(`disabled`, `true`));
+  }
+
+  removeDisableInputs() {
+    this.getElement().querySelectorAll(`.trip-filters__filter-input`)
+      .forEach((input) => input.removeAttribute(`disabled`));
   }
 }

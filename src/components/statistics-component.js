@@ -63,16 +63,16 @@ const drawChart = (ctx, data, title) => {
   let types = [];
   let values = [];
   switch (title) {
-    case `money`:
+    case StatisticsGraph.MONEY:
       types = data.sort((a, b) => (b.totalPrice - a.totalPrice)).map((el) => el.type.toUpperCase());
       values = data.sort((a, b) => (b.totalPrice - a.totalPrice)).map((el) => el.totalPrice);
       break;
-    case `transport`:
+    case StatisticsGraph.TRANSPORT:
       data = data.filter((el) => el.transport);
       types = data.sort((a, b) => (b.count - a.count)).map((el) => el.type.toUpperCase());
       values = data.sort((a, b) => (b.count - a.count)).map((el) => el.count);
       break;
-    case `time spent`:
+    case StatisticsGraph.TIME_SPENT:
       types = data.sort((a, b) => (b.totalTime - a.totalTime)).map((el) => el.type.toUpperCase());
       values = data.sort((a, b) => (b.totalTime - a.totalTime)).map((el) => el.totalTime);
       break;

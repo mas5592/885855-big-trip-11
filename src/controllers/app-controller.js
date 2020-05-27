@@ -57,6 +57,7 @@ export default class AppController {
 
     const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
     createNewEventButton.addEventListener(`click`, () => {
+      filterController.setDefaultView(true);
       this._activeMenuItem = MenuItem.TABLE;
       menu.setDefault();
       this._statisticsComponent.hide();

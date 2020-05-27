@@ -16,12 +16,12 @@ export const getChecked = (switchData) => {
 };
 
 export const getStatistics = (events, allTypes) => {
-  const arr = [];
+  const statistics = [];
 
   for (const [key] of allTypes) {
     const filteredEvents = events.filter((event) => event.type === key);
 
-    arr.push({
+    statistics.push({
       type: key,
       totalPrice: filteredEvents.reduce((totalPrice, it) => totalPrice + it.price, 0),
       count: filteredEvents.length,
@@ -29,11 +29,11 @@ export const getStatistics = (events, allTypes) => {
       transport: TRAVEL_TRANSPORT.some((it) => key === it)
     });
   }
-  return arr;
+  return statistics;
 };
 
-export const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalizeFirstLetter = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
 export const Mode = {

@@ -2,7 +2,7 @@ import {SortType, HIDDEN_CLASS} from '../data.js';
 import {render, RenderPosition, remove} from '../utils/render.js';
 import NoEventsComponent from '../components/no-events-component.js';
 import SortComponent from '../components/sort-component.js';
-import DayComponent from '../components/days-component.js';
+import DaysComponent from '../components/days-component.js';
 import EventController from './event-controller.js';
 import {Mode as EventControllerMode, EmptyEvent} from '../utils/common.js';
 import {formatDateTime, formatDateWithoutTime} from '../utils/time.js';
@@ -15,7 +15,7 @@ const renderEvents = (events, container, onDataChange, onViewChange, store, isSo
     : [true];
 
   dates.forEach((date, dateIndex) => {
-    const day = isSortedByDefault ? new DayComponent(formatDateWithoutTime(date), dateIndex + 1) : new DayComponent();
+    const days = isSortedByDefault ? new DaysComponent(formatDateWithoutTime(date), dateIndex + 1) : new DaysComponent();
 
     events
       .filter((event) => {
@@ -23,7 +23,7 @@ const renderEvents = (events, container, onDataChange, onViewChange, store, isSo
       })
       .forEach((event) => {
         const eventController = new EventController(
-            day.getElement().querySelector(`.trip-events__list`),
+            days.getElement().querySelector(`.trip-events__list`),
             onDataChange,
             onViewChange,
             store
@@ -33,7 +33,7 @@ const renderEvents = (events, container, onDataChange, onViewChange, store, isSo
         eventControllers.push(eventController);
       });
 
-    render(container, day);
+    render(container, days);
   });
 
   return eventControllers;

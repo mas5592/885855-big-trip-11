@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component.js';
 import {formatDateTimeAttr, formatInfoDateTime} from '../utils/time.js';
 
-export default class Day extends AbstractComponent {
+export default class Days extends AbstractComponent {
   constructor(day, dayCount) {
     super();
     this._day = day;
