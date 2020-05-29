@@ -91,10 +91,10 @@ export default class TripController {
   }
 
   createNewEvent() {
-    if (this._creatingEvent) {
-      this.onViewChange();
-      return;
-    }
+ //if (this._creatingEvent) {
+ //    this.onViewChange();
+ //   return;
+ // }
 
     this.onViewChange();
     this._creatingEvent = new EventController(this._container.parentElement, this._onDataChange, this.onViewChange, this._store);
@@ -104,6 +104,17 @@ export default class TripController {
     this._creatingEvent.render(EmptyEvent, EventControllerMode.ADD);
     this._eventControllers.push(this._creatingEvent);
   }
+  /*
+  createNewEvent() {
+    if (this._creatingEvent) {
+      return;
+    }
+
+    this._creatingEvent = new EventController(this._container.parentElement, this._onDataChange, this.onViewChange, this._store);
+    this._creatingEvent.render(EmptyEvent, EventControllerMode.ADD);
+
+    this._eventControllers = this._eventControllers.concat(this._creatingEvent);
+  }*/
 
   hide() {
     this._container.parentElement.classList.add(HIDDEN_CLASS);
@@ -125,7 +136,7 @@ export default class TripController {
   _removeEvents() {
     this._container.innerHTML = ``;
     this._eventControllers.forEach((_eventcontroller) => _eventcontroller.destroy());
-    this._eventcontrollers = [];
+    this._eventControllers = [];
   }
 
   _onDataChange(eventController, oldData, newData) {
@@ -168,6 +179,53 @@ export default class TripController {
       });
     }
   }
+ /*
+  _onDataChange(eventController, oldData, newData, createNewEventButton = null) {
+    if (oldData === EmptyEvent) {
+      this._creatingEvent = null;
+      if (newData === null) {
+        eventController.destroy();
+        if (createNewEventButton) {
+          createNewEventButton.removeAttribute(`disabled`);
+        }
+      } else {
+        this._api.createEvent(newData)
+          .then((eventModel) => {
+            this._eventsModel.addEvent(eventModel);
+            eventController.render(eventModel, EventControllerMode.DEFAULT);
+            this._updateEvent();
+            if (createNewEventButton) {
+              createNewEventButton.removeAttribute(`disabled`);
+              this._sort.removeDisabled();
+            }
+          })
+          .catch(() => {
+            eventController.shake();
+          });
+      }
+    } else if (newData === null) {
+      this._api.deleteEvent(oldData.id)
+        .then(() => {
+          this._eventsModel.removeEvent(oldData.id);
+          this._updateEvent();
+        })
+        .catch(() => {
+          eventController.shake();
+        });
+    } else {
+      this._api.updateEvent(oldData.id, newData)
+          .then((eventModel) => {
+            const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
+
+            if (isSuccess) {
+              eventController.render(eventModel, EventControllerMode.DEFAULT);
+            }
+          })
+        .catch(() => {
+          eventController.shake();
+        });
+    }
+  }*/
 
   _onSortTypeChange(sortType) {
     this._activeSortType = sortType;

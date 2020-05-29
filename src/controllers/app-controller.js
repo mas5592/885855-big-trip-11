@@ -55,7 +55,9 @@ export default class AppController {
     const daysListElement = tripEventsElement.querySelector(`.trip-days`);
     this._tripController = new TripController(daysListElement, this._eventsModel, this._api, this._store);
 
+
     const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+
     createNewEventButton.addEventListener(`click`, () => {
       filterController.setDefaultView(true);
       this._activeMenuItem = MenuItem.TABLE;
@@ -63,6 +65,10 @@ export default class AppController {
       this._statisticsComponent.hide();
       this._tripController.show();
       this._tripController.createNewEvent();
+
+        // if (createNewEventButton) {
+        //   createNewEventButton.removeAttribute(`disabled`);
+        // }
     });
 
     this._statisticsComponent.hide();

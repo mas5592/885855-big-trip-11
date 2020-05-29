@@ -1,9 +1,11 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {capitalizeFirstLetter, convertEvent, getChecked, Mode} from '../utils/common.js';
+import {formatTime} from '../utils/time.js';
 import {DefaultBtnText, Timeout, TRAVEL_TRANSPORT, TRAVEL_ACTIVITY, Placeholder} from '../data.js';
 import EventModel from '../models/event-model.js';
 import debounce from 'lodash/debounce';
 import DOMPurify from 'dompurify';
+import 'flatpickr/dist/flatpickr.min.css';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 
@@ -17,7 +19,7 @@ const createTypeRoutesMarkup = (choosers, type) => {
   }).join(`\n`);
 };
 
-export default class Event extends AbstractSmartComponent {
+export default class EventEdit extends AbstractSmartComponent {
   constructor(event, mode, store) {
     super();
     this._event = event;
@@ -51,6 +53,9 @@ export default class Event extends AbstractSmartComponent {
     const {endDate, isFavorite, price, startDate, type} = this._activeEvent;
     const {description, name, pictures} = this._activeEvent.destination;
 
+    const startTimeForm = formatTime(startDate, true);
+    const endTimeForm = formatTime(endDate, true);
+
     return (
       `<form class="${this._mode === Mode.ADD ? `trip-events__item` : ``}  event  event--edit" action="#" method="post">
         <header class="event__header">
@@ -60,7 +65,6 @@ export default class Event extends AbstractSmartComponent {
               <img class="event__type-icon" width="17" height="17" ${type ? `src="img/icons/${type}.png` : ``} " alt="Event type icon">
             </label>
             <input class="event__type-toggle visually-hidden" id="event-type-toggle-1" type="checkbox" name="event-type" value="${type}">
-
             <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Transfer</legend>
@@ -71,7 +75,6 @@ export default class Event extends AbstractSmartComponent {
               ${createTypeRoutesMarkup(TRAVEL_ACTIVITY, type)}
             </fieldset>
           </div>
-
           </div>
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-1">
@@ -85,10 +88,10 @@ export default class Event extends AbstractSmartComponent {
           </div>
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${moment(startDate).format(`DD/MM/YY HH:mm`)}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTimeForm}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${moment(endDate).format(`DD/MM/YY HH:mm`)}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTimeForm}">
           </div>
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price-1">
@@ -173,10 +176,10 @@ export default class Event extends AbstractSmartComponent {
   }
 
   setBtnText(action, text) {
-    if (action === DefaultBtnText.SAVE) {
+    if (action === `save`) {
       this._btnSave = text;
     }
-    if (action === DefaultBtnText.DELETE) {
+    if (action === `delete`) {
       this._btnDelete = text;
     }
 
@@ -201,8 +204,18 @@ export default class Event extends AbstractSmartComponent {
     }
   }
 
+  removeFlatpickr() {
+    if (this._flatpickrStart && this._flatpickrEnd) {
+      this._flatpickrStart.destroy();
+      this._flatpickrEnd.destroy();
+      this._flatpickrStart = null;
+      this._flatpickrEnd = null;
+     // this._cancelHandler = null;
+    }
+  }
+
   removeElement() {
-    this._removeFlatpickrs();
+    this.removeFlatpickr();
     super.removeElement();
   }
 
@@ -274,24 +287,14 @@ export default class Event extends AbstractSmartComponent {
         this.rerender();
       });
 
-    element.querySelector(`#event-start-time-1`)
-      .addEventListener(`change`, (evt) => {
-        this._activeEvent.startDate = moment(evt.target.value, `DD/MM/YY HH:mm`).valueOf();
-        this._activeEvent.endDate = this._activeEvent.startDate > this._activeEvent.endDate
-          ? this._activeEvent.startDate
-          : this._activeEvent.endDate;
+    element.querySelector(`#event-start-time-1`).addEventListener(`change`, (evt) => {
+      this._activeEvent.startDate = flatpickr.parseDate(evt.target.value, `d/m/y H:i`);
 
-        this._favoriteHandler = null;
-        this.rerender();
-      });
+    });
 
-    element.querySelector(`#event-end-time-1`)
-      .addEventListener(`change`, (evt) => {
-        this._activeEvent.endDate = moment(evt.target.value, `DD/MM/YY HH:mm`).valueOf();
-
-        this._favoriteHandler = null;
-        this.rerender();
-      });
+    element.querySelector(`#event-end-time-1`).addEventListener(`change`, (evt) => {
+      this._activeEvent.endDate = flatpickr.parseDate(evt.target.value, `d/m/y H:i`);
+    });
 
     element.querySelector(`.event__input--price`)
       .addEventListener(`change`, (evt) => {
@@ -318,27 +321,36 @@ export default class Event extends AbstractSmartComponent {
   }
 
   _applyFlatpickr() {
-    this._removeFlatpickrs();
-    this._flatpickrStart = this._setFlatpickr(this.getElement().querySelector(`#event-start-time-1`), this._currentStartDate);
-    this._flatpickrEnd = this._setFlatpickr(this.getElement().querySelector(`#event-end-time-1`), this._currentEndDate, this._currentStartDate);
-  }
 
-  _removeFlatpickrs() {
     if (this._flatpickrStart && this._flatpickrEnd) {
       this._flatpickrStart.destroy();
-      this._flatpickrStart = null;
       this._flatpickrEnd.destroy();
+      this._flatpickrStart = null;
       this._flatpickrEnd = null;
     }
-  }
 
-  _setFlatpickr(input, defaultTime) {
-    return flatpickr(input, {
-      enableTime: true,
+    const self = this;
+    this._flatpickrStart = flatpickr((this.getElement().querySelector(`#event-start-time-1`)), {
       dateFormat: `d/m/y H:i`,
-      minDate: this._activeEvent.startDate,
-      defaultDate: defaultTime,
-      allowInput: true,
+      enableTime: true,
+      defaultDate: this._activeEvent.startDate || `today`,
+      maxDate: this._activeEvent.startDate || `today`,
+      onChange(selectedDates) {
+        if (self._flatpickrEnd.config._minDate < selectedDates[0]) {
+          self._flatpickrEnd.setDate(selectedDates[0], false, `d/m/y H:i`);
+        }
+        self._flatpickrEnd.set(`minDate`, selectedDates[0]);
+      }
+    });
+
+    this._flatpickrEnd = flatpickr((this.getElement().querySelector(`#event-end-time-1`)), {
+      dateFormat: `d/m/y H:i`,
+      enableTime: true,
+      defaultDate: this._activeEvent.endDate || `today`,
+      minDate: this._activeEvent.endDate || `today`,
+      onChange(selectedDates) {
+        self._flatpickrStart.set(`maxDate`, selectedDates[0]);
+      },
     });
   }
 

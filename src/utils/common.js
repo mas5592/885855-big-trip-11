@@ -53,6 +53,7 @@ export const EmptyEvent = {
     }]
   },
   offers: [],
+
   startDate: Date.now(),
   endDate: Date.now(),
   price: 0,
