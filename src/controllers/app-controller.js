@@ -8,6 +8,8 @@ import {getStatistics} from '../utils/common.js';
 import {render, RenderPosition} from '../utils/render.js';
 import {MenuItem, HIDDEN_CLASS} from '../data.js';
 
+const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+
 export default class AppController {
   constructor(container, eventsModel, api, store) {
     this._container = container;
@@ -55,20 +57,14 @@ export default class AppController {
     const daysListElement = tripEventsElement.querySelector(`.trip-days`);
     this._tripController = new TripController(daysListElement, this._eventsModel, this._api, this._store);
 
-
-    const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
-
     createNewEventButton.addEventListener(`click`, () => {
+      createNewEventButton.disabled = true;
       filterController.setDefaultView(true);
       this._activeMenuItem = MenuItem.TABLE;
       menu.setDefault();
       this._statisticsComponent.hide();
       this._tripController.show();
       this._tripController.createNewEvent();
-
-        // if (createNewEventButton) {
-        //   createNewEventButton.removeAttribute(`disabled`);
-        // }
     });
 
     this._statisticsComponent.hide();
@@ -91,6 +87,7 @@ export default class AppController {
         this._statisticsComponent.show();
         this._tripController.hide();
         this._tripController.onViewChange();
+        createNewEventButton.disabled = false;
         break;
     }
   }

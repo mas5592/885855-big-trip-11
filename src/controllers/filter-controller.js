@@ -2,6 +2,8 @@ import FilterComponent from '../components/filter-component.js';
 import {render, replace} from '../utils/render.js';
 import {FilterType, MenuItem} from '../data.js';
 
+const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+
 export default class FilterController {
   constructor(container, eventsModel) {
     this._container = container;
@@ -47,6 +49,7 @@ export default class FilterController {
   }
 
   _onFilterChange(filterType) {
+    createNewEventButton.disabled = false;
     this._eventsModel.setFilter(filterType);
     this._activeFilterType = filterType;
   }

@@ -1,5 +1,4 @@
-export const AUTHORIZATION = `Basic sbsrgr344tytetgsbrw4`;
-
+export const AUTHORIZATION = `Basic 15reqf1d4axbbhdhw37`;
 export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 export const HIDDEN_CLASS = `visually-hidden`;
@@ -27,7 +26,6 @@ export const TRAVEL_ACTIVITY = [
   `sightseeing`,
   `restaurant`
 ];
-
 
 export const Placeholder = {
   TRANSPORT: `to`,
@@ -91,6 +89,5 @@ export const StatisticsGraph = {
 
 export const FILTER_DIGITS_RANGE = /^\d*\.?\d*$/;
 
-export const MILLISECONDS_IN_SECOND = 1000;
 export const MINUTES_IN_HOUR = 60;
 export const HOURS_IN_DAY = 24;

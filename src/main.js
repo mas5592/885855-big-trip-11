@@ -44,10 +44,10 @@ apiWithProvider.getData({url: StoreKey.OFFERS})
     remove(loadingComponent);
     render(document.querySelector(`.trip-events`), new ErrorComponent(error));
   });
-/*
+
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
-});*/
+});
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);

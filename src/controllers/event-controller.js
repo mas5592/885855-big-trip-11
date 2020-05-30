@@ -5,6 +5,8 @@ import EventComponent from '../components/event-component.js';
 import {render, replace, remove} from '../utils/render.js';
 import {Mode, EmptyEvent} from '../utils/common.js';
 
+const createNewEventButton = document.querySelector(`.trip-main__event-add-btn`);
+
 export default class EventController {
   constructor(container, onDataChange, onViewChange, store) {
     this._container = container;
@@ -38,15 +40,18 @@ export default class EventController {
     this._filterDigitInput(this._eventInputPrice);
 
     this._eventItemComponent.setArrowHandler(() => {
+      createNewEventButton.disabled = false;
       this._replaceItemToEdit();
       document.addEventListener(`keydown`, this._onEscPress);
     });
 
     this._eventComponent.setSubmitHandler((evt) => {
+      createNewEventButton.disabled = false;
       this._onFormSubmit(evt, this._mode);
     });
 
     this._eventComponent.setDeleteBtnClickHandler(() => {
+      createNewEventButton.disabled = false;
       this._onDeleteBtnClick(this._mode);
     });
 
@@ -162,6 +167,7 @@ export default class EventController {
 
   _onEscPress(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
+      createNewEventButton.disabled = false;
       this._replaceEditToItem();
     }
   }

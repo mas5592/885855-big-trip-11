@@ -210,7 +210,6 @@ export default class EventEdit extends AbstractSmartComponent {
       this._flatpickrEnd.destroy();
       this._flatpickrStart = null;
       this._flatpickrEnd = null;
-     // this._cancelHandler = null;
     }
   }
 
@@ -321,7 +320,6 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   _applyFlatpickr() {
-
     if (this._flatpickrStart && this._flatpickrEnd) {
       this._flatpickrStart.destroy();
       this._flatpickrEnd.destroy();
