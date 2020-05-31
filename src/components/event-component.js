@@ -19,7 +19,7 @@ const createTypeRoutesMarkup = (choosers, type) => {
   }).join(`\n`);
 };
 
-export default class EventEdit extends AbstractSmartComponent {
+export default class Event extends AbstractSmartComponent {
   constructor(event, mode, store) {
     super();
     this._event = event;
@@ -176,10 +176,10 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   setBtnText(action, text) {
-    if (action === `save`) {
+    if (action === DefaultBtnText.SAVE) {
       this._btnSave = text;
     }
-    if (action === `delete`) {
+    if (action === DefaultBtnText.DELETE) {
       this._btnDelete = text;
     }
 
