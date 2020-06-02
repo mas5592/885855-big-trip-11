@@ -101,7 +101,7 @@ export default class Event extends AbstractSmartComponent {
             <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${DOMPurify.sanitize(price)}">
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">${this._btnSave}</button>
-          <button class="event__reset-btn" type="reset">${this._mode === Mode.ADD ? `Cancel` : `${this._btnDelete}`}</button>
+          <button class="event__reset-btn" type="reset">${this._mode === Mode.ADD ? DefaultBtnText.CANCEL : `${this._btnDelete}`}</button>
       ${this._mode === Mode.ADD ? `` :
         `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn" for="event-favorite-1">

@@ -47,7 +47,8 @@ export const Method = {
 
 export const DefaultBtnText = {
   DELETE: `Delete`,
-  SAVE: `Save`
+  SAVE: `Save`,
+  CANCEL: `Cancel`
 };
 
 export const ConnectBtnText = {
